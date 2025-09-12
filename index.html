@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scoring Rubric Analysis</title>
+    <title>Builder Scoring Tool</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -67,6 +67,28 @@
             color: #333;
             margin-top: 0;
         }
+        .builder-name-input {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 6px;
+            border: 2px solid #2196F3;
+        }
+        .builder-name-input label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            color: #333;
+        }
+        .builder-name-input input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
         .calc-row {
             display: flex;
             align-items: center;
@@ -96,6 +118,88 @@
             font-size: 18px;
             font-weight: bold;
             margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .button-row {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+        .btn-primary {
+            background-color: #2196F3;
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #FF9800;
+            color: white;
+        }
+        .btn-success {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-danger {
+            background-color: #F44336;
+            color: white;
+        }
+        .btn:hover {
+            opacity: 0.9;
+        }
+        
+        .results-section {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            border: 2px solid #4CAF50;
+            display: none;
+        }
+        .results-section h3 {
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .builder-result {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .builder-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .builder-score {
+            font-size: 24px;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .score-excellent { background-color: #4CAF50; color: white; }
+        .score-good { background-color: #8BC34A; color: white; }
+        .score-average { background-color: #FFC107; color: black; }
+        .score-below-average { background-color: #FF9800; color: white; }
+        .score-poor { background-color: #F44336; color: white; }
+        .score-details {
+            font-size: 12px;
+            color: #666;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
         }
         .rating-scale {
             margin-top: 20px;
@@ -244,16 +348,52 @@
 
         <div class="calculator">
             <h3>Score Calculator</h3>
+            
+            <div class="builder-name-input">
+                <label for="builder-name">Builder Name:</label>
+                <input type="text" id="builder-name" placeholder="Enter builder name (e.g., ABC Construction)">
+            </div>
+            
             <div id="calculator-rows"></div>
+            
             <div class="total-score" id="total-score">
                 Total Score: 0 / 500
+            </div>
+            
+            <div class="button-row">
+                <button class="btn btn-primary" onclick="submitBuilder()">
+                    📊 Submit Builder Score
+                </button>
+                <button class="btn btn-secondary" onclick="clearForm()">
+                    🔄 Clear Form
+                </button>
+            </div>
+        </div>
+
+        <div class="results-section" id="results-section">
+            <h3>🏆 Builder Scores Summary</h3>
+            <div id="builder-list"></div>
+            <div class="button-row">
+                <button class="btn btn-success" onclick="exportResults()">
+                    📥 Export to CSV
+                </button>
+                <button class="btn btn-danger" onclick="clearAllResults()">
+                    🗑️ Clear All Results
+                </button>
             </div>
         </div>
 
         <div class="rating-scale">
             <h3>Rating Scale</h3>
             <p><strong>Total Possible Points:</strong> 500</p>
-            <p><strong>Scoring Range:</strong> 100-500 points</p>
+            <p><strong>Scoring Ranges:</strong></p>
+            <ul>
+                <li><strong>400-500:</strong> Excellent Partnership</li>
+                <li><strong>350-399:</strong> Good Partnership</li>
+                <li><strong>300-349:</strong> Average Partnership</li>
+                <li><strong>200-299:</strong> Below Average Partnership</li>
+                <li><strong>100-199:</strong> Poor Partnership</li>
+            </ul>
         </div>
     </div>
 
@@ -274,9 +414,11 @@
             {name: "Total Rebates", weight: 7}
         ];
 
+        let builderResults = [];
+
         function createCalculator() {
             const container = document.getElementById('calculator-rows');
-            container.innerHTML = ''; // Clear any existing content
+            container.innerHTML = '';
             
             categories.forEach((category, index) => {
                 const row = document.createElement('div');
@@ -312,6 +454,149 @@
             });
             
             document.getElementById('total-score').textContent = `Total Score: ${total} / 500`;
+            return total;
+        }
+
+        function submitBuilder() {
+            const builderName = document.getElementById('builder-name').value.trim();
+            if (!builderName) {
+                alert('Please enter a builder name');
+                return;
+            }
+
+            const total = calculateTotal();
+            if (total === 0) {
+                alert('Please select scores for all categories');
+                return;
+            }
+
+            // Check if builder already exists
+            const existingBuilder = builderResults.find(b => b.name.toLowerCase() === builderName.toLowerCase());
+            if (existingBuilder) {
+                if (!confirm(`Builder "${builderName}" already exists. Do you want to update their score?`)) {
+                    return;
+                }
+                // Remove existing entry
+                builderResults = builderResults.filter(b => b.name.toLowerCase() !== builderName.toLowerCase());
+            }
+
+            // Collect individual scores
+            const scores = {};
+            categories.forEach((category, index) => {
+                const scoreSelect = document.getElementById(`score-${index}`);
+                scores[category.name] = parseInt(scoreSelect.value) || 0;
+            });
+
+            // Add to results
+            const builderResult = {
+                name: builderName,
+                total: total,
+                scores: scores,
+                timestamp: new Date()
+            };
+
+            builderResults.push(builderResult);
+            displayResults();
+            clearForm();
+            
+            // Show success message
+            alert(`✅ ${builderName} scored and added to results!`);
+        }
+
+        function clearForm() {
+            document.getElementById('builder-name').value = '';
+            categories.forEach((category, index) => {
+                document.getElementById(`score-${index}`).value = 0;
+                document.getElementById(`points-${index}`).textContent = '0 pts';
+            });
+            document.getElementById('total-score').textContent = 'Total Score: 0 / 500';
+        }
+
+        function displayResults() {
+            const resultsSection = document.getElementById('results-section');
+            const builderList = document.getElementById('builder-list');
+            
+            resultsSection.style.display = 'block';
+            
+            // Sort by score (highest first)
+            const sortedResults = [...builderResults].sort((a, b) => b.total - a.total);
+            
+            builderList.innerHTML = sortedResults.map((result, index) => {
+                const scoreClass = getScoreClass(result.total);
+                const rank = index + 1;
+                const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
+                
+                return `
+                    <div class="builder-result">
+                        <div class="builder-name">${medal} ${result.name}</div>
+                        <div class="builder-score ${scoreClass}">${result.total} / 500 points</div>
+                        <div class="score-details">
+                            <div><strong>Payment discrepancies:</strong> ${result.scores['Payment discrepancies (past 12 months)']} × 10 = ${result.scores['Payment discrepancies (past 12 months)'] * 10} pts</div>
+                            <div><strong>Events attended:</strong> ${result.scores['% of events attended']} × 9 = ${result.scores['% of events attended'] * 9} pts</div>
+                            <div><strong>GM meetings:</strong> ${result.scores['% of GM meetings attended']} × 9 = ${result.scores['% of GM meetings attended'] * 9} pts</div>
+                            <div><strong>National contracts:</strong> ${result.scores['National contracts enrolled']} × 9 = ${result.scores['National contracts enrolled'] * 9} pts</div>
+                            <div><strong>Rebate revenue %:</strong> ${result.scores['% of annual revenue made in rebates']} × 9 = ${result.scores['% of annual revenue made in rebates'] * 9} pts</div>
+                            <div><strong>Contract reporting:</strong> ${result.scores['National contracts reported (avg last 4 quarters)']} × 9 = ${result.scores['National contracts reported (avg last 4 quarters)'] * 9} pts</div>
+                        </div>
+                        <button onclick="removeBuilder('${result.name}')" class="btn btn-danger" style="margin-top: 10px; font-size: 12px; padding: 5px 10px;">
+                            Remove
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getScoreClass(score) {
+            if (score >= 400) return 'score-excellent';
+            if (score >= 350) return 'score-good';
+            if (score >= 300) return 'score-average';
+            if (score >= 200) return 'score-below-average';
+            return 'score-poor';
+        }
+
+        function removeBuilder(builderName) {
+            if (confirm(`Are you sure you want to remove ${builderName}?`)) {
+                builderResults = builderResults.filter(b => b.name !== builderName);
+                if (builderResults.length === 0) {
+                    document.getElementById('results-section').style.display = 'none';
+                } else {
+                    displayResults();
+                }
+            }
+        }
+
+        function clearAllResults() {
+            if (confirm('Are you sure you want to clear all results? This cannot be undone.')) {
+                builderResults = [];
+                document.getElementById('results-section').style.display = 'none';
+            }
+        }
+
+        function exportResults() {
+            if (builderResults.length === 0) {
+                alert('No results to export');
+                return;
+            }
+
+            let csv = 'Rank,Builder Name,Total Score,';
+            csv += categories.map(cat => `"${cat.name}"`).join(',') + ',';
+            csv += categories.map(cat => `"${cat.name} Points"`).join(',') + '\n';
+
+            const sortedResults = [...builderResults].sort((a, b) => b.total - a.total);
+            
+            sortedResults.forEach((result, index) => {
+                csv += `${index + 1},"${result.name}",${result.total},`;
+                csv += categories.map(cat => result.scores[cat.name]).join(',') + ',';
+                csv += categories.map(cat => result.scores[cat.name] * cat.weight).join(',') + '\n';
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `builder_scores_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
         }
 
         // Initialize calculator when page loads
