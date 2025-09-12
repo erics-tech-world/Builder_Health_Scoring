@@ -1,74 +1,323 @@
 <!DOCTYPE html>
-CBUSA Builder Evaluation Rubric
-Category	5 (Excellent)	4 (Good)	3 (Average)	2 (Below Average)	1 (Poor)	Weight
-National contracts enrolled	>10	8-10	5-7	4-3	3-1	9
-National contracts reported (avg last 4 quarters)	>8	8-6	5-4	4-3	3-1	9
-# of local vendors used (last 4 quarters)	>12	11-10	9-7	6-4	3-1	7
-% of annual revenue made in rebates	>2%	1-2%	0.5-1%	0.1-0.5%	0-0.1%	9
-% of events attended	100%	75-99%	50-75%	25-50%	0-25%	9
-% of GM meetings attended	100%	76-99%	51-75%	26-50%	0-25%	9
-Payment discrepancies (past 12 months)	0 late payments	1 late payment	2-3 late payments	4-5 late payments	>5 late payments	10
-Builder Reporting?	Yes	-	-	-	No	6
-# of homes built annually	>20	19-8	7-4	3-1	0	6
-Average $ of each project	>$1.5M	$750K-$1.5M	$400K-$750K	$100K-$400K	$0-$100K	6
-Total annual revenue	>$30M	-	-	-	<$30M	6
-% of committed buys participated	100%	75%	50%	25%	0%	7
-Total Rebates	>25	25-11	10-1	0	<0	7
-Score Calculator
-National contracts enrolled:
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scoring Rubric Analysis</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            font-size: 12px;
+        }
+        .rubric-table th,
+        .rubric-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        .rubric-table th {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+        .category-col {
+            text-align: left !important;
+            font-weight: bold;
+            background-color: #f9f9f9;
+            max-width: 200px;
+        }
+        .weight-col {
+            background-color: #e3f2fd;
+            font-weight: bold;
+        }
+        .score-5 { background-color: #4CAF50; color: white; }
+        .score-4 { background-color: #8BC34A; }
+        .score-3 { background-color: #FFC107; }
+        .score-2 { background-color: #FF9800; }
+        .score-1 { background-color: #F44336; color: white; }
+        
+        .calculator {
+            background-color: #f0f8ff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin-top: 20px;
+        }
+        .calculator h3 {
+            color: #333;
+            margin-top: 0;
+        }
+        .calc-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+        .calc-row label {
+            width: 300px;
+            font-size: 12px;
+        }
+        .calc-row select {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .calc-row .points {
+            font-weight: bold;
+            color: #333;
+            min-width: 60px;
+        }
+        .total-score {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .rating-scale {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff3e0;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CBUSA Builder Evaluation Rubric</h1>
+        
+        <table class="rubric-table">
+            <thead>
+                <tr>
+                    <th class="category-col">Category</th>
+                    <th class="score-5">5 (Excellent)</th>
+                    <th class="score-4">4 (Good)</th>
+                    <th class="score-3">3 (Average)</th>
+                    <th class="score-2">2 (Below Average)</th>
+                    <th class="score-1">1 (Poor)</th>
+                    <th class="weight-col">Weight</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="category-col">National contracts enrolled</td>
+                    <td class="score-5">>10</td>
+                    <td class="score-4">8-10</td>
+                    <td class="score-3">5-7</td>
+                    <td class="score-2">4-3</td>
+                    <td class="score-1">3-1</td>
+                    <td class="weight-col">9</td>
+                </tr>
+                <tr>
+                    <td class="category-col">National contracts reported (avg last 4 quarters)</td>
+                    <td class="score-5">>8</td>
+                    <td class="score-4">8-6</td>
+                    <td class="score-3">5-4</td>
+                    <td class="score-2">4-3</td>
+                    <td class="score-1">3-1</td>
+                    <td class="weight-col">9</td>
+                </tr>
+                <tr>
+                    <td class="category-col"># of local vendors used (last 4 quarters)</td>
+                    <td class="score-5">>12</td>
+                    <td class="score-4">11-10</td>
+                    <td class="score-3">9-7</td>
+                    <td class="score-2">6-4</td>
+                    <td class="score-1">3-1</td>
+                    <td class="weight-col">7</td>
+                </tr>
+                <tr>
+                    <td class="category-col">% of annual revenue made in rebates</td>
+                    <td class="score-5">>2%</td>
+                    <td class="score-4">1-2%</td>
+                    <td class="score-3">0.5-1%</td>
+                    <td class="score-2">0.1-0.5%</td>
+                    <td class="score-1">0-0.1%</td>
+                    <td class="weight-col">9</td>
+                </tr>
+                <tr>
+                    <td class="category-col">% of events attended</td>
+                    <td class="score-5">100%</td>
+                    <td class="score-4">75-99%</td>
+                    <td class="score-3">50-75%</td>
+                    <td class="score-2">25-50%</td>
+                    <td class="score-1">0-25%</td>
+                    <td class="weight-col">9</td>
+                </tr>
+                <tr>
+                    <td class="category-col">% of GM meetings attended</td>
+                    <td class="score-5">100%</td>
+                    <td class="score-4">76-99%</td>
+                    <td class="score-3">51-75%</td>
+                    <td class="score-2">26-50%</td>
+                    <td class="score-1">0-25%</td>
+                    <td class="weight-col">9</td>
+                </tr>
+                <tr>
+                    <td class="category-col">Payment discrepancies (past 12 months)</td>
+                    <td class="score-5">0 late payments</td>
+                    <td class="score-4">1 late payment</td>
+                    <td class="score-3">2-3 late payments</td>
+                    <td class="score-2">4-5 late payments</td>
+                    <td class="score-1">>5 late payments</td>
+                    <td class="weight-col">10</td>
+                </tr>
+                <tr>
+                    <td class="category-col">Builder Reporting?</td>
+                    <td class="score-5">Yes</td>
+                    <td class="score-4">-</td>
+                    <td class="score-3">-</td>
+                    <td class="score-2">-</td>
+                    <td class="score-1">No</td>
+                    <td class="weight-col">6</td>
+                </tr>
+                <tr>
+                    <td class="category-col"># of homes built annually</td>
+                    <td class="score-5">>20</td>
+                    <td class="score-4">19-8</td>
+                    <td class="score-3">7-4</td>
+                    <td class="score-2">3-1</td>
+                    <td class="score-1">0</td>
+                    <td class="weight-col">6</td>
+                </tr>
+                <tr>
+                    <td class="category-col">Average $ of each project</td>
+                    <td class="score-5">>$1.5M</td>
+                    <td class="score-4">$750K-$1.5M</td>
+                    <td class="score-3">$400K-$750K</td>
+                    <td class="score-2">$100K-$400K</td>
+                    <td class="score-1">$0-$100K</td>
+                    <td class="weight-col">6</td>
+                </tr>
+                <tr>
+                    <td class="category-col">Total annual revenue</td>
+                    <td class="score-5">>$30M</td>
+                    <td class="score-4">-</td>
+                    <td class="score-3">-</td>
+                    <td class="score-2">-</td>
+                    <td class="score-1"><$30M</td>
+                    <td class="weight-col">6</td>
+                </tr>
+                <tr>
+                    <td class="category-col">% of committed buys participated</td>
+                    <td class="score-5">100%</td>
+                    <td class="score-4">75%</td>
+                    <td class="score-3">50%</td>
+                    <td class="score-2">25%</td>
+                    <td class="score-1">0%</td>
+                    <td class="weight-col">7</td>
+                </tr>
+                <tr>
+                    <td class="category-col">Total Rebates</td>
+                    <td class="score-5">>25</td>
+                    <td class="score-4">25-11</td>
+                    <td class="score-3">10-1</td>
+                    <td class="score-2">0</td>
+                    <td class="score-1"><0</td>
+                    <td class="weight-col">7</td>
+                </tr>
+            </tbody>
+        </table>
 
-Select Score...
-0 pts
-National contracts reported (avg last 4 quarters):
+        <div class="calculator">
+            <h3>Score Calculator</h3>
+            <div id="calculator-rows"></div>
+            <div class="total-score" id="total-score">
+                Total Score: 0 / 500
+            </div>
+        </div>
 
-Select Score...
-0 pts
-# of local vendors used (last 4 quarters):
+        <div class="rating-scale">
+            <h3>Rating Scale</h3>
+            <p><strong>Total Possible Points:</strong> 500</p>
+            <p><strong>Scoring Range:</strong> 100-500 points</p>
+        </div>
+    </div>
 
-Select Score...
-0 pts
-% of annual revenue made in rebates:
+    <script>
+        const categories = [
+            {name: "National contracts enrolled", weight: 9},
+            {name: "National contracts reported (avg last 4 quarters)", weight: 9},
+            {name: "# of local vendors used (last 4 quarters)", weight: 7},
+            {name: "% of annual revenue made in rebates", weight: 9},
+            {name: "% of events attended", weight: 9},
+            {name: "% of GM meetings attended", weight: 9},
+            {name: "Payment discrepancies (past 12 months)", weight: 10},
+            {name: "Builder Reporting?", weight: 6},
+            {name: "# of homes built annually", weight: 6},
+            {name: "Average $ of each project", weight: 6},
+            {name: "Total annual revenue", weight: 6},
+            {name: "% of committed buys participated", weight: 7},
+            {name: "Total Rebates", weight: 7}
+        ];
 
-Select Score...
-0 pts
-% of events attended:
+        function createCalculator() {
+            const container = document.getElementById('calculator-rows');
+            container.innerHTML = ''; // Clear any existing content
+            
+            categories.forEach((category, index) => {
+                const row = document.createElement('div');
+                row.className = 'calc-row';
+                
+                row.innerHTML = `
+                    <label>${category.name}:</label>
+                    <select id="score-${index}" onchange="calculateTotal()">
+                        <option value="0">Select Score...</option>
+                        <option value="1">1 (Poor)</option>
+                        <option value="2">2 (Below Average)</option>
+                        <option value="3">3 (Average)</option>
+                        <option value="4">4 (Good)</option>
+                        <option value="5">5 (Excellent)</option>
+                    </select>
+                    <span class="points" id="points-${index}">0 pts</span>
+                `;
+                container.appendChild(row);
+            });
+        }
 
-Select Score...
-0 pts
-% of GM meetings attended:
+        function calculateTotal() {
+            let total = 0;
+            categories.forEach((category, index) => {
+                const scoreSelect = document.getElementById(`score-${index}`);
+                const pointsSpan = document.getElementById(`points-${index}`);
+                
+                const score = parseInt(scoreSelect.value) || 0;
+                const points = score * category.weight;
+                total += points;
+                
+                pointsSpan.textContent = `${points} pts`;
+            });
+            
+            document.getElementById('total-score').textContent = `Total Score: ${total} / 500`;
+        }
 
-Select Score...
-0 pts
-Payment discrepancies (past 12 months):
-
-Select Score...
-0 pts
-Builder Reporting?:
-
-Select Score...
-0 pts
-# of homes built annually:
-
-Select Score...
-0 pts
-Average $ of each project:
-
-Select Score...
-0 pts
-Total annual revenue:
-
-Select Score...
-0 pts
-% of committed buys participated:
-
-Select Score...
-0 pts
-Total Rebates:
-
-Select Score...
-0 pts
-Total Score: 0 / 500
-Rating Scale
-Total Possible Points: 500
-
-Scoring Range: 100-500 points
+        // Initialize calculator when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            createCalculator();
+        });
+    </script>
+</body>
+</html>
