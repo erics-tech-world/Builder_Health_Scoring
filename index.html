@@ -1,4 +1,12 @@
-<!DOCTYPE html>
+        function editLastBuilder() {
+            if (builderResults.length === 0) {
+                alert('No builders to edit');
+                return;
+            }
+
+            const lastBuilder = builderResults[builderResults.length - 1];
+            editBuilder(lastBuilder.name);
+        }<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -420,21 +428,52 @@
             const container = document.getElementById('calculator-rows');
             container.innerHTML = '';
             
+            const criteria = {
+                "National contracts enrolled": ["3-1", "4-3", "5-7", "8-10", ">10"],
+                "National contracts reported (avg last 4 quarters)": ["3-1", "4-3", "5-4", "8-6", ">8"],
+                "# of local vendors used (last 4 quarters)": ["3-1", "6-4", "9-7", "11-10", ">12"],
+                "% of annual revenue made in rebates": ["0-0.1%", "0.1-0.5%", "0.5-1%", "1-2%", ">2%"],
+                "% of events attended": ["0-25%", "25-50%", "50-75%", "75-99%", "100%"],
+                "% of GM meetings attended": ["0-25%", "26-50%", "51-75%", "76-99%", "100%"],
+                "Payment discrepancies (past 12 months)": [">5 late payments", "4-5 late payments", "2-3 late payments", "1 late payment", "0 late payments"],
+                "Builder Reporting?": ["No", "-", "-", "-", "Yes"],
+                "# of homes built annually": ["0", "3-1", "7-4", "19-8", ">20"],
+                "Average $ of each project": ["$0-$100K", "$100K-$400K", "$400K-$750K", "$750K-$1.5M", ">$1.5M"],
+                "Total annual revenue": ["<$30M", "-", "-", "-", ">$30M"],
+                "% of committed buys participated": ["0%", "25%", "50%", "75%", "100%"],
+                "Total Rebates": ["<0", "0", "10-1", "25-11", ">25"]
+            };
+            
             categories.forEach((category, index) => {
                 const row = document.createElement('div');
                 row.className = 'calc-row';
+                row.style.marginBottom = '15px';
+                row.style.padding = '10px';
+                row.style.backgroundColor = 'white';
+                row.style.borderRadius = '6px';
+                row.style.border = '1px solid #ddd';
+                
+                const categoryName = category.name;
+                const categoryWeight = category.weight;
+                const scoreCriteria = criteria[categoryName] || [];
                 
                 row.innerHTML = `
-                    <label>${category.name}:</label>
-                    <select id="score-${index}" onchange="calculateTotal()">
-                        <option value="0">Select Score...</option>
-                        <option value="1">1 (Poor)</option>
-                        <option value="2">2 (Below Average)</option>
-                        <option value="3">3 (Average)</option>
-                        <option value="4">4 (Good)</option>
-                        <option value="5">5 (Excellent)</option>
-                    </select>
-                    <span class="points" id="points-${index}">0 pts</span>
+                    <div style="width: 100%; margin-bottom: 8px;">
+                        <label style="font-weight: bold; color: #333; display: block; margin-bottom: 5px;">
+                            ${categoryName} (Weight: ${categoryWeight})
+                        </label>
+                        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                            <select id="score-${index}" onchange="calculateTotal()" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; min-width: 200px;">
+                                <option value="0">Select Score...</option>
+                                <option value="1">1 - ${scoreCriteria[0] || 'Poor'}</option>
+                                <option value="2">2 - ${scoreCriteria[1] || 'Below Average'}</option>
+                                <option value="3">3 - ${scoreCriteria[2] || 'Average'}</option>
+                                <option value="4">4 - ${scoreCriteria[3] || 'Good'}</option>
+                                <option value="5">5 - ${scoreCriteria[4] || 'Excellent'}</option>
+                            </select>
+                            <span class="points" id="points-${index}" style="font-weight: bold; color: #333; min-width: 60px;">0 pts</span>
+                        </div>
+                    </div>
                 `;
                 container.appendChild(row);
             });
@@ -499,8 +538,44 @@
             displayResults();
             clearForm();
             
+            // Show edit button for last submitted builder
+            document.getElementById('edit-last-btn').style.display = 'inline-block';
+            
             // Show success message
             alert(`✅ ${builderName} scored and added to results!`);
+        }
+
+        function editLastBuilder() {
+            if (builderResults.length === 0) {
+                alert('No builders to edit');
+                return;
+            }
+
+            const lastBuilder = builderResults[builderResults.length - 1];
+            
+            // Fill form with last builder's data
+            document.getElementById('builder-name').value = lastBuilder.name;
+            
+            categories.forEach((category, index) => {
+                const scoreSelect = document.getElementById(`score-${index}`);
+                scoreSelect.value = lastBuilder.scores[category.name];
+            });
+            
+            // Remove the last builder from results (they can re-submit)
+            builderResults.pop();
+            
+            // Update display
+            if (builderResults.length === 0) {
+                document.getElementById('results-section').style.display = 'none';
+                document.getElementById('edit-last-btn').style.display = 'none';
+            } else {
+                displayResults();
+            }
+            
+            // Recalculate totals
+            calculateTotal();
+            
+            alert(`✏️ ${lastBuilder.name} loaded for editing. Make changes and submit again.`);
         }
 
         function clearForm() {
