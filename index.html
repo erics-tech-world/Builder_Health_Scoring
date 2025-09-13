@@ -1,17 +1,9 @@
-        function editLastBuilder() {
-            if (builderResults.length === 0) {
-                alert('No builders to edit');
-                return;
-            }
-
-            const lastBuilder = builderResults[builderResults.length - 1];
-            editBuilder(lastBuilder.name);
-        }<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Builder Scoring Tool</title>
+    <title>CBUSA Builder Evaluation Tool</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -98,19 +90,29 @@
             box-sizing: border-box;
         }
         .calc-row {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            gap: 10px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 6px;
+            border: 1px solid #ddd;
         }
         .calc-row label {
-            width: 300px;
-            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .calc-row-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
         }
         .calc-row select {
-            padding: 5px;
+            padding: 8px;
             border: 1px solid #ccc;
             border-radius: 4px;
+            min-width: 200px;
         }
         .calc-row .points {
             font-weight: bold;
@@ -147,6 +149,10 @@
         }
         .btn-secondary {
             background-color: #FF9800;
+            color: white;
+        }
+        .btn-purple {
+            background-color: #9C27B0;
             color: white;
         }
         .btn-success {
@@ -375,6 +381,9 @@
                 <button class="btn btn-secondary" onclick="clearForm()">
                     🔄 Clear Form
                 </button>
+                <button class="btn btn-purple" style="display: none;" onclick="editLastBuilder()" id="edit-last-btn">
+                    ✏️ Edit Last Builder
+                </button>
             </div>
         </div>
 
@@ -447,32 +456,23 @@
             categories.forEach((category, index) => {
                 const row = document.createElement('div');
                 row.className = 'calc-row';
-                row.style.marginBottom = '15px';
-                row.style.padding = '10px';
-                row.style.backgroundColor = 'white';
-                row.style.borderRadius = '6px';
-                row.style.border = '1px solid #ddd';
                 
                 const categoryName = category.name;
                 const categoryWeight = category.weight;
                 const scoreCriteria = criteria[categoryName] || [];
                 
                 row.innerHTML = `
-                    <div style="width: 100%; margin-bottom: 8px;">
-                        <label style="font-weight: bold; color: #333; display: block; margin-bottom: 5px;">
-                            ${categoryName} (Weight: ${categoryWeight})
-                        </label>
-                        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                            <select id="score-${index}" onchange="calculateTotal()" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; min-width: 200px;">
-                                <option value="0">Select Score...</option>
-                                <option value="1">1 - ${scoreCriteria[0] || 'Poor'}</option>
-                                <option value="2">2 - ${scoreCriteria[1] || 'Below Average'}</option>
-                                <option value="3">3 - ${scoreCriteria[2] || 'Average'}</option>
-                                <option value="4">4 - ${scoreCriteria[3] || 'Good'}</option>
-                                <option value="5">5 - ${scoreCriteria[4] || 'Excellent'}</option>
-                            </select>
-                            <span class="points" id="points-${index}" style="font-weight: bold; color: #333; min-width: 60px;">0 pts</span>
-                        </div>
+                    <label>${categoryName} (Weight: ${categoryWeight})</label>
+                    <div class="calc-row-content">
+                        <select id="score-${index}" onchange="calculateTotal()">
+                            <option value="0">Select Score...</option>
+                            <option value="1">1 - ${scoreCriteria[0] || 'Poor'}</option>
+                            <option value="2">2 - ${scoreCriteria[1] || 'Below Average'}</option>
+                            <option value="3">3 - ${scoreCriteria[2] || 'Average'}</option>
+                            <option value="4">4 - ${scoreCriteria[3] || 'Good'}</option>
+                            <option value="5">5 - ${scoreCriteria[4] || 'Excellent'}</option>
+                        </select>
+                        <span class="points" id="points-${index}">0 pts</span>
                     </div>
                 `;
                 container.appendChild(row);
@@ -509,24 +509,20 @@
                 return;
             }
 
-            // Check if builder already exists
             const existingBuilder = builderResults.find(b => b.name.toLowerCase() === builderName.toLowerCase());
             if (existingBuilder) {
                 if (!confirm(`Builder "${builderName}" already exists. Do you want to update their score?`)) {
                     return;
                 }
-                // Remove existing entry
                 builderResults = builderResults.filter(b => b.name.toLowerCase() !== builderName.toLowerCase());
             }
 
-            // Collect individual scores
             const scores = {};
             categories.forEach((category, index) => {
                 const scoreSelect = document.getElementById(`score-${index}`);
                 scores[category.name] = parseInt(scoreSelect.value) || 0;
             });
 
-            // Add to results
             const builderResult = {
                 name: builderName,
                 total: total,
@@ -538,44 +534,8 @@
             displayResults();
             clearForm();
             
-            // Show edit button for last submitted builder
             document.getElementById('edit-last-btn').style.display = 'inline-block';
-            
-            // Show success message
             alert(`✅ ${builderName} scored and added to results!`);
-        }
-
-        function editLastBuilder() {
-            if (builderResults.length === 0) {
-                alert('No builders to edit');
-                return;
-            }
-
-            const lastBuilder = builderResults[builderResults.length - 1];
-            
-            // Fill form with last builder's data
-            document.getElementById('builder-name').value = lastBuilder.name;
-            
-            categories.forEach((category, index) => {
-                const scoreSelect = document.getElementById(`score-${index}`);
-                scoreSelect.value = lastBuilder.scores[category.name];
-            });
-            
-            // Remove the last builder from results (they can re-submit)
-            builderResults.pop();
-            
-            // Update display
-            if (builderResults.length === 0) {
-                document.getElementById('results-section').style.display = 'none';
-                document.getElementById('edit-last-btn').style.display = 'none';
-            } else {
-                displayResults();
-            }
-            
-            // Recalculate totals
-            calculateTotal();
-            
-            alert(`✏️ ${lastBuilder.name} loaded for editing. Make changes and submit again.`);
         }
 
         function clearForm() {
@@ -585,6 +545,7 @@
                 document.getElementById(`points-${index}`).textContent = '0 pts';
             });
             document.getElementById('total-score').textContent = 'Total Score: 0 / 500';
+            document.getElementById('edit-last-btn').style.display = 'none';
         }
 
         function displayResults() {
@@ -593,7 +554,6 @@
             
             resultsSection.style.display = 'block';
             
-            // Sort by score (highest first)
             const sortedResults = [...builderResults].sort((a, b) => b.total - a.total);
             
             builderList.innerHTML = sortedResults.map((result, index) => {
@@ -613,8 +573,11 @@
                             <div><strong>Rebate revenue %:</strong> ${result.scores['% of annual revenue made in rebates']} × 9 = ${result.scores['% of annual revenue made in rebates'] * 9} pts</div>
                             <div><strong>Contract reporting:</strong> ${result.scores['National contracts reported (avg last 4 quarters)']} × 9 = ${result.scores['National contracts reported (avg last 4 quarters)'] * 9} pts</div>
                         </div>
+                        <button onclick="editBuilder('${result.name}')" class="btn btn-purple" style="margin-top: 10px; font-size: 12px; padding: 5px 10px; margin-right: 5px;">
+                            ✏️ Edit
+                        </button>
                         <button onclick="removeBuilder('${result.name}')" class="btn btn-danger" style="margin-top: 10px; font-size: 12px; padding: 5px 10px;">
-                            Remove
+                            🗑️ Remove
                         </button>
                     </div>
                 `;
@@ -627,6 +590,45 @@
             if (score >= 300) return 'score-average';
             if (score >= 200) return 'score-below-average';
             return 'score-poor';
+        }
+
+        function editBuilder(builderName) {
+            const builderToEdit = builderResults.find(b => b.name === builderName);
+            if (!builderToEdit) {
+                alert('Builder not found');
+                return;
+            }
+
+            document.getElementById('builder-name').value = builderToEdit.name;
+            
+            categories.forEach((category, index) => {
+                const scoreSelect = document.getElementById(`score-${index}`);
+                scoreSelect.value = builderToEdit.scores[category.name];
+            });
+            
+            builderResults = builderResults.filter(b => b.name !== builderName);
+            
+            if (builderResults.length === 0) {
+                document.getElementById('results-section').style.display = 'none';
+            } else {
+                displayResults();
+            }
+            
+            calculateTotal();
+            document.getElementById('edit-last-btn').style.display = 'inline-block';
+            
+            document.querySelector('.calculator').scrollIntoView({ behavior: 'smooth' });
+            alert(`✏️ ${builderName} loaded for editing. Make changes and submit again.`);
+        }
+
+        function editLastBuilder() {
+            if (builderResults.length === 0) {
+                alert('No builders to edit');
+                return;
+            }
+
+            const lastBuilder = builderResults[builderResults.length - 1];
+            editBuilder(lastBuilder.name);
         }
 
         function removeBuilder(builderName) {
@@ -674,7 +676,6 @@
             URL.revokeObjectURL(url);
         }
 
-        // Initialize calculator when page loads
         document.addEventListener('DOMContentLoaded', function() {
             createCalculator();
         });
