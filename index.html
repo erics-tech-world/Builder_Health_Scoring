@@ -716,21 +716,17 @@
         function submitBuilder() {
             const builderName = document.getElementById('builder-name').value.trim();
             if (!builderName) {
-                alert('Please enter a builder name');
-                return;
+                return; // Just return silently, no alert
             }
 
             const total = calculateTotal();
             if (total === 0) {
-                alert('Please select scores for all categories');
-                return;
+                return; // Just return silently, no alert
             }
 
             const existingBuilder = builderResults.find(b => b.name.toLowerCase() === builderName.toLowerCase());
             if (existingBuilder) {
-                if (!confirm(`Builder "${builderName}" already exists. Do you want to update their score?`)) {
-                    return;
-                }
+                // Silently update existing builder without confirmation
                 builderResults = builderResults.filter(b => b.name.toLowerCase() !== builderName.toLowerCase());
             }
 
@@ -752,7 +748,7 @@
             clearForm();
             
             document.getElementById('edit-last-btn').style.display = 'inline-block';
-            alert(`✅ ${builderName} scored and added to results!`);
+            // Removed success alert
         }
 
         function clearForm() {
@@ -892,8 +888,7 @@
         function loadCurrentBuilder() {
             const sortedBuilders = getSortedBuilders();
             if (sortedBuilders.length === 0 || currentCarouselIndex >= sortedBuilders.length) {
-                alert('No builder selected.');
-                return;
+                return; // Silently return if no builder
             }
             
             const currentBuilder = sortedBuilders[currentCarouselIndex];
@@ -903,8 +898,7 @@
         function deleteCurrentBuilder() {
             const sortedBuilders = getSortedBuilders();
             if (sortedBuilders.length === 0 || currentCarouselIndex >= sortedBuilders.length) {
-                alert('No builder selected.');
-                return;
+                return; // Silently return if no builder
             }
             
             const currentBuilder = sortedBuilders[currentCarouselIndex];
@@ -959,8 +953,7 @@
         function editBuilder(builderName) {
             const builderToEdit = builderResults.find(b => b.name === builderName);
             if (!builderToEdit) {
-                alert('Builder not found');
-                return;
+                return; // Silently return if builder not found
             }
 
             document.getElementById('builder-name').value = builderToEdit.name;
@@ -982,13 +975,12 @@
             document.getElementById('edit-last-btn').style.display = 'inline-block';
             
             document.querySelector('.calculator').scrollIntoView({ behavior: 'smooth' });
-            alert(`✏️ ${builderName} loaded for editing. Make changes and submit again.`);
+            // Removed edit confirmation alert
         }
 
         function editLastBuilder() {
             if (builderResults.length === 0) {
-                alert('No builders to edit');
-                return;
+                return; // Silently return if no builders
             }
 
             const lastBuilder = builderResults[builderResults.length - 1];
@@ -996,30 +988,27 @@
         }
 
         function removeBuilder(builderName) {
-            if (confirm(`Are you sure you want to remove ${builderName}?`)) {
-                builderResults = builderResults.filter(b => b.name !== builderName);
-                if (builderResults.length === 0) {
-                    document.getElementById('results-section').style.display = 'none';
-                    updateCarousel();
-                } else {
-                    displayResults();
-                }
+            // Silently remove without confirmation
+            builderResults = builderResults.filter(b => b.name !== builderName);
+            if (builderResults.length === 0) {
+                document.getElementById('results-section').style.display = 'none';
+                updateCarousel();
+            } else {
+                displayResults();
             }
         }
 
         function clearAllResults() {
-            if (confirm('Are you sure you want to clear all results? This cannot be undone.')) {
-                builderResults = [];
-                currentCarouselIndex = 0;
-                document.getElementById('results-section').style.display = 'none';
-                updateCarousel();
-            }
+            // Silently clear all without confirmation
+            builderResults = [];
+            currentCarouselIndex = 0;
+            document.getElementById('results-section').style.display = 'none';
+            updateCarousel();
         }
 
         function exportResults() {
             if (builderResults.length === 0) {
-                alert('No results to export');
-                return;
+                return; // Silently return if no results
             }
 
             let csv = 'Rank,Builder Name,Total Score,';
@@ -1041,14 +1030,12 @@
             a.download = `CBUSA_Builder_Scores_${new Date().toISOString().split('T')[0]}.csv`;
             a.click();
             URL.revokeObjectURL(url);
-            
-            alert('✅ Basic scoring data exported to CSV (opens in Excel)');
+            // Removed export confirmation alert
         }
 
         function exportDetailedResults() {
             if (builderResults.length === 0) {
-                alert('No results to export');
-                return;
+                return; // Silently return if no results
             }
 
             let csv = 'CBUSA Builder Evaluation Report\n';
@@ -1123,8 +1110,7 @@
             a.download = `CBUSA_Builder_Detailed_Report_${new Date().toISOString().split('T')[0]}.csv`;
             a.click();
             URL.revokeObjectURL(url);
-            
-            alert('✅ Comprehensive report exported with scoring criteria and detailed analysis!');
+            // Removed export confirmation alert
         }
 
         document.addEventListener('DOMContentLoaded', function() {
