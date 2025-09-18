@@ -753,12 +753,8 @@
         }
 
         function clearForm() {
-            // If there's a builder being edited and form is being cleared, restore them
-            if (builderBeingEdited) {
-                builderResults.push(builderBeingEdited);
-                builderBeingEdited = null;
-                displayResults(); // Refresh the display
-            }
+            // Clear the editing state without restoring (since we're clearing intentionally)
+            builderBeingEdited = null;
             
             document.getElementById('builder-name').value = '';
             categories.forEach((category, index) => {
@@ -966,11 +962,14 @@
 
             // If there's already a builder being edited, restore them first
             if (builderBeingEdited) {
-                builderResults.push(builderBeingEdited);
+                // Only restore if it's not the same builder we're trying to edit
+                if (builderBeingEdited.name !== builderName) {
+                    builderResults.push(builderBeingEdited);
+                }
             }
 
-            // Store the builder being edited (don't remove from results yet)
-            builderBeingEdited = { ...builderToEdit }; // Make a copy
+            // Store the builder being edited (make a copy of the original state)
+            builderBeingEdited = { ...builderToEdit }; 
             
             // Remove from visible results
             builderResults = builderResults.filter(b => b.name !== builderName);
@@ -1130,9 +1129,36 @@
             // Removed export confirmation alert
         }
 
+        // Add a function to restore unsaved builder when needed
+        function restoreBuilderIfNeeded() {
+            if (builderBeingEdited) {
+                // Check if this builder is already in results (avoid duplicates)
+                const exists = builderResults.find(b => b.name === builderBeingEdited.name);
+                if (!exists) {
+                    builderResults.push(builderBeingEdited);
+                }
+                builderBeingEdited = null;
+                displayResults();
+            }
+        }
+
+        // Add event listener for when user starts typing a new builder name
         document.addEventListener('DOMContentLoaded', function() {
             createCalculator();
             updateCarousel();
+            
+            // Restore unsaved builder when user starts entering a new name
+            const builderNameInput = document.getElementById('builder-name');
+            let lastBuilderName = '';
+            
+            builderNameInput.addEventListener('input', function() {
+                const currentName = this.value.trim();
+                // If they're typing a completely new name, restore any unsaved builder
+                if (builderBeingEdited && currentName !== builderBeingEdited.name && currentName !== '' && lastBuilderName === '') {
+                    restoreBuilderIfNeeded();
+                }
+                lastBuilderName = currentName;
+            });
         });
     </script>
 </body>
