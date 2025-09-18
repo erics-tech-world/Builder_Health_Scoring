@@ -328,6 +328,20 @@
             text-align: center;
             font-weight: bold;
             color: #333;
+            margin-top: 15px;
+        }
+
+        .controls-row-1 {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .controls-row-2 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         /* Placeholder Styles */
@@ -576,29 +590,27 @@
             </div>
             
             <div class="carousel-controls" id="carousel-controls" style="display: none;">
-                <div style="display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                <div class="controls-row-1">
                     <span id="carousel-counter">1 of 1</span>
+                </div>
+                
+                <div class="controls-row-2">
+                    <label for="sort-dropdown" style="font-weight: bold; color: #333; margin-right: 10px;">Sort by:</label>
+                    <select id="sort-dropdown" onchange="changeSortOrder()" style="padding: 5px 8px; border: 1px solid #ccc; border-radius: 4px; background: white; margin-right: 20px;">
+                        <option value="date_newest">Date Added (Newest First)</option>
+                        <option value="date_oldest">Date Added (Oldest First)</option>
+                        <option value="alpha_az">Alphabetical A-Z</option>
+                        <option value="alpha_za">Alphabetical Z-A</option>
+                        <option value="score_high">Score (Highest First)</option>
+                        <option value="score_low">Score (Lowest First)</option>
+                    </select>
                     
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <label for="sort-dropdown" style="font-weight: bold; color: #333;">Sort by:</label>
-                        <select id="sort-dropdown" onchange="changeSortOrder()" style="padding: 5px 8px; border: 1px solid #ccc; border-radius: 4px; background: white;">
-                            <option value="date_newest">Date Added (Newest First)</option>
-                            <option value="date_oldest">Date Added (Oldest First)</option>
-                            <option value="alpha_az">Alphabetical A-Z</option>
-                            <option value="alpha_za">Alphabetical Z-A</option>
-                            <option value="score_high">Score (Highest First)</option>
-                            <option value="score_low">Score (Lowest First)</option>
-                        </select>
-                    </div>
-                    
-                    <div style="display: flex; gap: 10px;">
-                        <button class="btn btn-primary" onclick="loadCurrentBuilder()">
-                            📝 Edit First Visible
-                        </button>
-                        <button class="btn btn-danger" onclick="deleteCurrentBuilder()">
-                            🗑️ Delete First Visible
-                        </button>
-                    </div>
+                    <button class="btn btn-primary" onclick="loadCurrentBuilder()" style="margin-right: 10px;">
+                        📝 Edit First Visible
+                    </button>
+                    <button class="btn btn-danger" onclick="deleteCurrentBuilder()">
+                        🗑️ Delete First Visible
+                    </button>
                 </div>
             </div>
         </div>
