@@ -23,6 +23,36 @@
             text-align: center;
             margin-bottom: 30px;
         }
+
+        /* Warning Notice Styles */
+        .warning-notice {
+            background-color: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            box-shadow: 0 2px 8px rgba(255, 193, 7, 0.2);
+        }
+        .warning-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+        .warning-content h3 {
+            margin: 0 0 10px 0;
+            color: #856404;
+            font-size: 18px;
+        }
+        .warning-content p {
+            margin: 8px 0;
+            color: #856404;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Table Styles */
         .rubric-table {
             width: 100%;
             border-collapse: collapse;
@@ -55,7 +85,128 @@
         .score-3 { background-color: #FFC107; }
         .score-2 { background-color: #FF9800; }
         .score-1 { background-color: #F44336; color: white; }
-        
+
+        /* Carousel Styles */
+        .carousel-section {
+            background-color: #e8f4fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+            border: 2px solid #2196F3;
+        }
+        .carousel-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .carousel-track-container {
+            overflow: hidden;
+            width: 1000px;
+            height: 220px;
+            position: relative;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .carousel-track {
+            display: flex;
+            transition: transform 0.3s ease;
+            height: 100%;
+        }
+        .carousel-card {
+            min-width: 320px;
+            height: 200px;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            margin-right: 10px;
+        }
+        .carousel-card:last-child {
+            margin-right: 0;
+        }
+        .carousel-card h4 {
+            margin: 0 0 8px 0;
+            font-size: 18px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .carousel-card .score-display {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .carousel-card .quick-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3px;
+            font-size: 10px;
+            opacity: 0.9;
+            line-height: 1.2;
+        }
+        .carousel-btn {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        .carousel-btn:hover {
+            background-color: #1976D2;
+            transform: scale(1.1);
+        }
+        .carousel-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .carousel-placeholder {
+            width: 1000px;
+            height: 220px;
+            margin: 0 auto;
+            border: 2px dashed #2196F3;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(33, 150, 243, 0.05);
+        }
+        .placeholder-content {
+            text-align: center;
+            color: #666;
+        }
+        .placeholder-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        .placeholder-content h4 {
+            margin: 0 0 10px 0;
+            color: #2196F3;
+            font-size: 20px;
+        }
+        .placeholder-content p {
+            margin: 5px 0;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        /* Calculator Styles */
         .calculator {
             background-color: #f0f8ff;
             padding: 20px;
@@ -119,6 +270,8 @@
             color: #333;
             min-width: 60px;
         }
+
+        /* Button Styles */
         .total-score {
             background-color: #4CAF50;
             color: white;
@@ -166,7 +319,8 @@
         .btn:hover {
             opacity: 0.9;
         }
-        
+
+        /* Results Styles */
         .results-section {
             background-color: #f9f9f9;
             padding: 20px;
@@ -215,203 +369,12 @@
             grid-template-columns: 1fr 1fr;
             gap: 5px;
         }
+
         .rating-scale {
             margin-top: 20px;
             padding: 15px;
             background-color: #fff3e0;
             border-radius: 8px;
-        }
-
-        /* Carousel Styles */
-        .carousel-section {
-            background-color: #e8f4fd;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 30px 0;
-            border: 2px solid #2196F3;
-        }
-
-        .carousel-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .carousel-track-container {
-            overflow: hidden;
-            width: 1000px;
-            height: 220px;
-            position: relative;
-            border-radius: 8px;
-            background-color: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .carousel-track {
-            display: flex;
-            transition: transform 0.3s ease;
-            height: 100%;
-        }
-
-        .carousel-card {
-            min-width: 320px;
-            height: 200px;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 8px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            position: relative;
-            margin-right: 10px;
-        }
-
-        .carousel-card:last-child {
-            margin-right: 0;
-        }
-
-        .carousel-card h4 {
-            margin: 0 0 8px 0;
-            font-size: 18px;
-            text-align: center;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .carousel-card .score-display {
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 8px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .carousel-card .quick-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3px;
-            font-size: 10px;
-            opacity: 0.9;
-            line-height: 1.2;
-        }
-
-        .carousel-btn {
-            background-color: #2196F3;
-            color: white;
-            border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 0 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-        }
-
-        .carousel-btn:hover {
-            background-color: #1976D2;
-            transform: scale(1.1);
-        }
-
-        .carousel-btn:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .carousel-controls {
-            text-align: center;
-            font-weight: bold;
-            color: #333;
-            margin-top: 15px;
-        }
-
-        .controls-row-1 {
-            margin-bottom: 15px;
-            font-size: 16px;
-        }
-
-        .controls-row-2 {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        /* Placeholder Styles */
-        .carousel-placeholder {
-            width: 1000px;
-            height: 220px;
-            margin: 0 auto;
-            border: 2px dashed #2196F3;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: rgba(33, 150, 243, 0.05);
-        }
-
-        .placeholder-content {
-            text-align: center;
-            color: #666;
-        }
-
-        .placeholder-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
-
-        .placeholder-content h4 {
-            margin: 0 0 10px 0;
-            color: #2196F3;
-            font-size: 20px;
-        }
-
-        .placeholder-content p {
-            margin: 5px 0;
-            font-size: 14px;
-            line-height: 1.4;
-        }
-
-        /* Warning Notice Styles */
-        .warning-notice {
-            background-color: #fff3cd;
-            border: 2px solid #ffc107;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-            box-shadow: 0 2px 8px rgba(255, 193, 7, 0.2);
-        }
-
-        .warning-icon {
-            font-size: 32px;
-            flex-shrink: 0;
-        }
-
-        .warning-content h3 {
-            margin: 0 0 10px 0;
-            color: #856404;
-            font-size: 18px;
-        }
-
-        .warning-content p {
-            margin: 8px 0;
-            color: #856404;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .warning-content strong {
-            font-weight: bold;
         }
     </style>
 </head>
@@ -589,14 +552,14 @@
                 <button class="carousel-btn carousel-btn-right" onclick="nextBuilder()" id="next-btn">›</button>
             </div>
             
-            <div class="carousel-controls" id="carousel-controls" style="display: none;">
-                <div class="controls-row-1">
-                    <span id="carousel-counter">1 of 1</span>
+            <!-- Simple controls -->
+            <div id="carousel-controls" style="display: none; text-align: center; margin-top: 20px; padding: 15px; background: #f0f0f0; border-radius: 8px;">
+                <div style="margin-bottom: 15px;">
+                    <span id="carousel-counter" style="font-weight: bold;">1 of 1</span>
                 </div>
-                
-                <div class="controls-row-2">
-                    <label for="sort-dropdown" style="font-weight: bold; color: #333; margin-right: 10px;">Sort by:</label>
-                    <select id="sort-dropdown" onchange="changeSortOrder()" style="padding: 5px 8px; border: 1px solid #ccc; border-radius: 4px; background: white; margin-right: 20px;">
+                <div style="margin-bottom: 15px;">
+                    <label for="sort-dropdown" style="margin-right: 10px; font-weight: bold;">Sort by:</label>
+                    <select id="sort-dropdown" onchange="changeSortOrder()" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
                         <option value="date_newest">Date Added (Newest First)</option>
                         <option value="date_oldest">Date Added (Oldest First)</option>
                         <option value="alpha_az">Alphabetical A-Z</option>
@@ -604,13 +567,10 @@
                         <option value="score_high">Score (Highest First)</option>
                         <option value="score_low">Score (Lowest First)</option>
                     </select>
-                    
-                    <button class="btn btn-primary" onclick="loadCurrentBuilder()" style="margin-right: 10px;">
-                        📝 Edit First Visible
-                    </button>
-                    <button class="btn btn-danger" onclick="deleteCurrentBuilder()">
-                        🗑️ Delete First Visible
-                    </button>
+                </div>
+                <div>
+                    <button class="btn btn-primary" onclick="loadCurrentBuilder()" style="margin-right: 10px;">📝 Edit First Visible</button>
+                    <button class="btn btn-danger" onclick="deleteCurrentBuilder()">🗑️ Delete First Visible</button>
                 </div>
             </div>
         </div>
@@ -630,15 +590,9 @@
             </div>
             
             <div class="button-row">
-                <button class="btn btn-primary" onclick="submitBuilder()">
-                    📊 Submit Builder Score
-                </button>
-                <button class="btn btn-secondary" onclick="clearForm()">
-                    🔄 Clear Form
-                </button>
-                <button class="btn btn-purple" style="display: none;" onclick="editLastBuilder()" id="edit-last-btn">
-                    ✏️ Edit Last Builder
-                </button>
+                <button class="btn btn-primary" onclick="submitBuilder()">📊 Submit Builder Score</button>
+                <button class="btn btn-secondary" onclick="clearForm()">🔄 Clear Form</button>
+                <button class="btn btn-purple" style="display: none;" onclick="editLastBuilder()" id="edit-last-btn">✏️ Edit Last Builder</button>
             </div>
         </div>
 
@@ -646,15 +600,9 @@
             <h3>🏆 Builder Scores Summary</h3>
             <div id="builder-list"></div>
             <div class="button-row">
-                <button class="btn btn-success" onclick="exportResults()">
-                    📥 Export to Excel
-                </button>
-                <button class="btn" style="background-color: #17a2b8; color: white;" onclick="exportDetailedResults()">
-                    📊 Export Detailed Report
-                </button>
-                <button class="btn btn-danger" onclick="clearAllResults()">
-                    🗑️ Clear All Results
-                </button>
+                <button class="btn btn-success" onclick="exportResults()">📥 Export to Excel</button>
+                <button class="btn" style="background-color: #17a2b8; color: white;" onclick="exportDetailedResults()">📊 Export Detailed Report</button>
+                <button class="btn btn-danger" onclick="clearAllResults()">🗑️ Clear All Results</button>
             </div>
         </div>
 
@@ -808,43 +756,6 @@
             document.getElementById('edit-last-btn').style.display = 'none';
         }
 
-        function displayResults() {
-            const resultsSection = document.getElementById('results-section');
-            const builderList = document.getElementById('builder-list');
-            
-            resultsSection.style.display = 'block';
-            updateCarousel(); // Update carousel when results change
-            
-            const sortedResults = [...builderResults].sort((a, b) => b.total - a.total);
-            
-            builderList.innerHTML = sortedResults.map((result, index) => {
-                const scoreClass = getScoreClass(result.total);
-                const rank = index + 1;
-                const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
-                
-                return `
-                    <div class="builder-result">
-                        <div class="builder-name">${medal} ${result.name}</div>
-                        <div class="builder-score ${scoreClass}">${result.total} / 500 points</div>
-                        <div class="score-details">
-                            <div><strong>Payment discrepancies:</strong> ${result.scores['Payment discrepancies (past 12 months)']} × 10 = ${result.scores['Payment discrepancies (past 12 months)'] * 10} pts</div>
-                            <div><strong>Events attended:</strong> ${result.scores['% of events attended']} × 9 = ${result.scores['% of events attended'] * 9} pts</div>
-                            <div><strong>GM meetings:</strong> ${result.scores['% of GM meetings attended']} × 9 = ${result.scores['% of GM meetings attended'] * 9} pts</div>
-                            <div><strong>National contracts:</strong> ${result.scores['National contracts enrolled']} × 9 = ${result.scores['National contracts enrolled'] * 9} pts</div>
-                            <div><strong>Rebate revenue %:</strong> ${result.scores['% of annual revenue made in rebates']} × 9 = ${result.scores['% of annual revenue made in rebates'] * 9} pts</div>
-                            <div><strong>Contract reporting:</strong> ${result.scores['National contracts reported (avg last 4 quarters)']} × 9 = ${result.scores['National contracts reported (avg last 4 quarters)'] * 9} pts</div>
-                        </div>
-                        <button onclick="editBuilder('${result.name}')" class="btn btn-purple" style="margin-top: 10px; font-size: 12px; padding: 5px 10px; margin-right: 5px;">
-                            ✏️ Edit
-                        </button>
-                        <button onclick="removeBuilder('${result.name}')" class="btn btn-danger" style="margin-top: 10px; font-size: 12px; padding: 5px 10px;">
-                            🗑️ Remove
-                        </button>
-                    </div>
-                `;
-            }).join('');
-        }
-
         function getSortedBuilders() {
             const sorted = [...builderResults];
             
@@ -869,9 +780,10 @@
         function changeSortOrder() {
             const dropdown = document.getElementById('sort-dropdown');
             currentSortOrder = dropdown.value;
-            currentCarouselIndex = 0; // Reset to first position when sorting changes
+            currentCarouselIndex = 0;
             updateCarousel();
         }
+
         function updateCarousel() {
             const carouselContainer = document.getElementById('carousel-container');
             const carouselControls = document.getElementById('carousel-controls');
@@ -879,22 +791,18 @@
             const carouselTrack = document.getElementById('carousel-track');
             
             if (builderResults.length === 0) {
-                // Show placeholder, hide carousel
                 carouselPlaceholder.style.display = 'flex';
                 carouselContainer.style.display = 'none';
                 carouselControls.style.display = 'none';
                 return;
             }
             
-            // Hide placeholder, show carousel
             carouselPlaceholder.style.display = 'none';
             carouselContainer.style.display = 'flex';
             carouselControls.style.display = 'block';
             
-            // Get sorted builders
             const sortedBuilders = getSortedBuilders();
             
-            // Reset carousel index if it's out of bounds
             if (currentCarouselIndex >= sortedBuilders.length) {
                 currentCarouselIndex = Math.max(0, sortedBuilders.length - 3);
             }
@@ -902,9 +810,7 @@
                 currentCarouselIndex = 0;
             }
             
-            // Generate carousel cards using sorted builders
             carouselTrack.innerHTML = sortedBuilders.map((builder, index) => {
-                const scoreClass = getScoreClass(builder.total);
                 return `
                     <div class="carousel-card">
                         <h4>${builder.name}</h4>
@@ -924,11 +830,10 @@
             updateCarouselPosition();
             updateCarouselControls();
         }
-        }
 
         function updateCarouselPosition() {
             const carouselTrack = document.getElementById('carousel-track');
-            const translateX = -currentCarouselIndex * 330; // 320px card width + 10px margin
+            const translateX = -currentCarouselIndex * 330;
             carouselTrack.style.transform = `translateX(${translateX}px)`;
         }
 
@@ -939,7 +844,6 @@
             
             const sortedBuilders = getSortedBuilders();
             const totalBuilders = sortedBuilders.length;
-            const visibleBuilders = Math.min(3, totalBuilders);
             const maxIndex = Math.max(0, totalBuilders - 3);
             
             prevBtn.disabled = currentCarouselIndex === 0;
@@ -976,11 +880,10 @@
         function loadCurrentBuilder() {
             const sortedBuilders = getSortedBuilders();
             if (sortedBuilders.length === 0 || currentCarouselIndex >= sortedBuilders.length) {
-                alert('No builder selected. Click on a builder card first, or use the arrow buttons to navigate.');
+                alert('No builder selected.');
                 return;
             }
             
-            // Get the first visible builder in the current view
             const currentBuilder = sortedBuilders[currentCarouselIndex];
             editBuilder(currentBuilder.name);
         }
@@ -988,13 +891,49 @@
         function deleteCurrentBuilder() {
             const sortedBuilders = getSortedBuilders();
             if (sortedBuilders.length === 0 || currentCarouselIndex >= sortedBuilders.length) {
-                alert('No builder selected. Click on a builder card first, or use the arrow buttons to navigate.');
+                alert('No builder selected.');
                 return;
             }
             
-            // Get the first visible builder in the current view
             const currentBuilder = sortedBuilders[currentCarouselIndex];
             removeBuilder(currentBuilder.name);
+        }
+
+        function displayResults() {
+            const resultsSection = document.getElementById('results-section');
+            const builderList = document.getElementById('builder-list');
+            
+            resultsSection.style.display = 'block';
+            updateCarousel();
+            
+            const sortedResults = [...builderResults].sort((a, b) => b.total - a.total);
+            
+            builderList.innerHTML = sortedResults.map((result, index) => {
+                const scoreClass = getScoreClass(result.total);
+                const rank = index + 1;
+                const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
+                
+                return `
+                    <div class="builder-result">
+                        <div class="builder-name">${medal} ${result.name}</div>
+                        <div class="builder-score ${scoreClass}">${result.total} / 500 points</div>
+                        <div class="score-details">
+                            <div><strong>Payment discrepancies:</strong> ${result.scores['Payment discrepancies (past 12 months)']} × 10 = ${result.scores['Payment discrepancies (past 12 months)'] * 10} pts</div>
+                            <div><strong>Events attended:</strong> ${result.scores['% of events attended']} × 9 = ${result.scores['% of events attended'] * 9} pts</div>
+                            <div><strong>GM meetings:</strong> ${result.scores['% of GM meetings attended']} × 9 = ${result.scores['% of GM meetings attended'] * 9} pts</div>
+                            <div><strong>National contracts:</strong> ${result.scores['National contracts enrolled']} × 9 = ${result.scores['National contracts enrolled'] * 9} pts</div>
+                            <div><strong>Rebate revenue %:</strong> ${result.scores['% of annual revenue made in rebates']} × 9 = ${result.scores['% of annual revenue made in rebates'] * 9} pts</div>
+                            <div><strong>Contract reporting:</strong> ${result.scores['National contracts reported (avg last 4 quarters)']} × 9 = ${result.scores['National contracts reported (avg last 4 quarters)'] * 9} pts</div>
+                        </div>
+                        <button onclick="editBuilder('${result.name}')" class="btn btn-purple" style="margin-top: 10px; font-size: 12px; padding: 5px 10px; margin-right: 5px;">
+                            ✏️ Edit
+                        </button>
+                        <button onclick="removeBuilder('${result.name}')" class="btn btn-danger" style="margin-top: 10px; font-size: 12px; padding: 5px 10px;">
+                            🗑️ Remove
+                        </button>
+                    </div>
+                `;
+            }).join('');
         }
 
         function getScoreClass(score) {
@@ -1049,7 +988,7 @@
                 builderResults = builderResults.filter(b => b.name !== builderName);
                 if (builderResults.length === 0) {
                     document.getElementById('results-section').style.display = 'none';
-                    document.getElementById('carousel-section').style.display = 'none';
+                    updateCarousel();
                 } else {
                     displayResults();
                 }
@@ -1061,7 +1000,7 @@
                 builderResults = [];
                 currentCarouselIndex = 0;
                 document.getElementById('results-section').style.display = 'none';
-                document.getElementById('carousel-section').style.display = 'none';
+                updateCarousel();
             }
         }
 
@@ -1071,7 +1010,6 @@
                 return;
             }
 
-            // Create CSV with basic scoring data
             let csv = 'Rank,Builder Name,Total Score,';
             csv += categories.map(cat => `"${cat.name} Score"`).join(',') + ',';
             csv += categories.map(cat => `"${cat.name} Points"`).join(',') + '\n';
@@ -1101,12 +1039,10 @@
                 return;
             }
 
-            // Create comprehensive CSV report
             let csv = 'CBUSA Builder Evaluation Report\n';
             csv += `Generated on: ${new Date().toLocaleDateString()}\n`;
             csv += `Total Builders Evaluated: ${builderResults.length}\n\n`;
             
-            // Add scoring criteria reference
             csv += 'SCORING CRITERIA REFERENCE\n';
             csv += 'Category,Weight,Score 1,Score 2,Score 3,Score 4,Score 5\n';
             
@@ -1181,6 +1117,7 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             createCalculator();
+            updateCarousel();
         });
     </script>
 </body>
