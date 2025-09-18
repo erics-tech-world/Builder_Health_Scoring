@@ -649,6 +649,7 @@
         let builderResults = [];
         let currentCarouselIndex = 0;
         let currentSortOrder = 'date_newest';
+        let builderBeingEdited = null; // Track which builder is currently being edited
 
         function createCalculator() {
             const container = document.getElementById('calculator-rows');
@@ -752,6 +753,13 @@
         }
 
         function clearForm() {
+            // If there's a builder being edited and form is being cleared, restore them
+            if (builderBeingEdited) {
+                builderResults.push(builderBeingEdited);
+                builderBeingEdited = null;
+                displayResults(); // Refresh the display
+            }
+            
             document.getElementById('builder-name').value = '';
             categories.forEach((category, index) => {
                 document.getElementById(`score-${index}`).value = 0;
@@ -956,14 +964,24 @@
                 return; // Silently return if builder not found
             }
 
+            // If there's already a builder being edited, restore them first
+            if (builderBeingEdited) {
+                builderResults.push(builderBeingEdited);
+            }
+
+            // Store the builder being edited (don't remove from results yet)
+            builderBeingEdited = { ...builderToEdit }; // Make a copy
+            
+            // Remove from visible results
+            builderResults = builderResults.filter(b => b.name !== builderName);
+
+            // Load into form
             document.getElementById('builder-name').value = builderToEdit.name;
             
             categories.forEach((category, index) => {
                 const scoreSelect = document.getElementById(`score-${index}`);
                 scoreSelect.value = builderToEdit.scores[category.name];
             });
-            
-            builderResults = builderResults.filter(b => b.name !== builderName);
             
             if (builderResults.length === 0) {
                 document.getElementById('results-section').style.display = 'none';
@@ -975,7 +993,6 @@
             document.getElementById('edit-last-btn').style.display = 'inline-block';
             
             document.querySelector('.calculator').scrollIntoView({ behavior: 'smooth' });
-            // Removed edit confirmation alert
         }
 
         function editLastBuilder() {
