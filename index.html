@@ -241,8 +241,8 @@
 
         .carousel-track-container {
             overflow: hidden;
-            width: 600px;
-            height: 200px;
+            width: 1000px;
+            height: 220px;
             position: relative;
             border-radius: 8px;
             background-color: white;
@@ -256,9 +256,9 @@
         }
 
         .carousel-card {
-            min-width: 600px;
+            min-width: 320px;
             height: 200px;
-            padding: 20px;
+            padding: 15px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border-radius: 8px;
@@ -267,29 +267,35 @@
             flex-direction: column;
             justify-content: center;
             position: relative;
+            margin-right: 10px;
+        }
+
+        .carousel-card:last-child {
+            margin-right: 0;
         }
 
         .carousel-card h4 {
-            margin: 0 0 15px 0;
-            font-size: 24px;
+            margin: 0 0 8px 0;
+            font-size: 18px;
             text-align: center;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
         .carousel-card .score-display {
-            font-size: 32px;
+            font-size: 24px;
             font-weight: bold;
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 8px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
         .carousel-card .quick-stats {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            font-size: 12px;
+            gap: 3px;
+            font-size: 10px;
             opacity: 0.9;
+            line-height: 1.2;
         }
 
         .carousel-btn {
@@ -326,8 +332,8 @@
 
         /* Placeholder Styles */
         .carousel-placeholder {
-            width: 600px;
-            height: 200px;
+            width: 1000px;
+            height: 220px;
             margin: 0 auto;
             border: 2px dashed #2196F3;
             border-radius: 8px;
@@ -570,13 +576,30 @@
             </div>
             
             <div class="carousel-controls" id="carousel-controls" style="display: none;">
-                <span id="carousel-counter">1 of 1</span>
-                <button class="btn btn-primary" onclick="loadCurrentBuilder()" style="margin-left: 15px;">
-                    📝 Edit This Builder
-                </button>
-                <button class="btn btn-danger" onclick="deleteCurrentBuilder()" style="margin-left: 10px;">
-                    🗑️ Delete This Builder
-                </button>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                    <span id="carousel-counter">1 of 1</span>
+                    
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <label for="sort-dropdown" style="font-weight: bold; color: #333;">Sort by:</label>
+                        <select id="sort-dropdown" onchange="changeSortOrder()" style="padding: 5px 8px; border: 1px solid #ccc; border-radius: 4px; background: white;">
+                            <option value="date_newest">Date Added (Newest First)</option>
+                            <option value="date_oldest">Date Added (Oldest First)</option>
+                            <option value="alpha_az">Alphabetical A-Z</option>
+                            <option value="alpha_za">Alphabetical Z-A</option>
+                            <option value="score_high">Score (Highest First)</option>
+                            <option value="score_low">Score (Lowest First)</option>
+                        </select>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-primary" onclick="loadCurrentBuilder()">
+                            📝 Edit First Visible
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteCurrentBuilder()">
+                            🗑️ Delete First Visible
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -656,6 +679,7 @@
 
         let builderResults = [];
         let currentCarouselIndex = 0;
+        let currentSortOrder = 'date_newest';
 
         function createCalculator() {
             const container = document.getElementById('calculator-rows');
@@ -809,6 +833,33 @@
             }).join('');
         }
 
+        function getSortedBuilders() {
+            const sorted = [...builderResults];
+            
+            switch (currentSortOrder) {
+                case 'date_newest':
+                    return sorted.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                case 'date_oldest':
+                    return sorted.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+                case 'alpha_az':
+                    return sorted.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+                case 'alpha_za':
+                    return sorted.sort((a, b) => b.name.toLowerCase().localeCompare(a.name.toLowerCase()));
+                case 'score_high':
+                    return sorted.sort((a, b) => b.total - a.total);
+                case 'score_low':
+                    return sorted.sort((a, b) => a.total - b.total);
+                default:
+                    return sorted;
+            }
+        }
+
+        function changeSortOrder() {
+            const dropdown = document.getElementById('sort-dropdown');
+            currentSortOrder = dropdown.value;
+            currentCarouselIndex = 0; // Reset to first position when sorting changes
+            updateCarousel();
+        }
         function updateCarousel() {
             const carouselContainer = document.getElementById('carousel-container');
             const carouselControls = document.getElementById('carousel-controls');
@@ -828,16 +879,19 @@
             carouselContainer.style.display = 'flex';
             carouselControls.style.display = 'block';
             
+            // Get sorted builders
+            const sortedBuilders = getSortedBuilders();
+            
             // Reset carousel index if it's out of bounds
-            if (currentCarouselIndex >= builderResults.length) {
-                currentCarouselIndex = builderResults.length - 1;
+            if (currentCarouselIndex >= sortedBuilders.length) {
+                currentCarouselIndex = Math.max(0, sortedBuilders.length - 3);
             }
             if (currentCarouselIndex < 0) {
                 currentCarouselIndex = 0;
             }
             
-            // Generate carousel cards
-            carouselTrack.innerHTML = builderResults.map((builder, index) => {
+            // Generate carousel cards using sorted builders
+            carouselTrack.innerHTML = sortedBuilders.map((builder, index) => {
                 const scoreClass = getScoreClass(builder.total);
                 return `
                     <div class="carousel-card">
@@ -858,10 +912,11 @@
             updateCarouselPosition();
             updateCarouselControls();
         }
+        }
 
         function updateCarouselPosition() {
             const carouselTrack = document.getElementById('carousel-track');
-            const translateX = -currentCarouselIndex * 600; // 600px is card width
+            const translateX = -currentCarouselIndex * 330; // 320px card width + 10px margin
             carouselTrack.style.transform = `translateX(${translateX}px)`;
         }
 
@@ -870,45 +925,63 @@
             const nextBtn = document.getElementById('next-btn');
             const counter = document.getElementById('carousel-counter');
             
-            prevBtn.disabled = currentCarouselIndex === 0;
-            nextBtn.disabled = currentCarouselIndex === builderResults.length - 1;
+            const sortedBuilders = getSortedBuilders();
+            const totalBuilders = sortedBuilders.length;
+            const visibleBuilders = Math.min(3, totalBuilders);
+            const maxIndex = Math.max(0, totalBuilders - 3);
             
-            counter.textContent = `${currentCarouselIndex + 1} of ${builderResults.length}`;
+            prevBtn.disabled = currentCarouselIndex === 0;
+            nextBtn.disabled = currentCarouselIndex >= maxIndex;
+            
+            const startBuilder = currentCarouselIndex + 1;
+            const endBuilder = Math.min(currentCarouselIndex + 3, totalBuilders);
+            
+            if (totalBuilders <= 3) {
+                counter.textContent = `Showing all ${totalBuilders} builders`;
+            } else {
+                counter.textContent = `Showing ${startBuilder}-${endBuilder} of ${totalBuilders}`;
+            }
         }
 
         function previousBuilder() {
             if (currentCarouselIndex > 0) {
-                currentCarouselIndex--;
+                currentCarouselIndex = Math.max(0, currentCarouselIndex - 3);
                 updateCarouselPosition();
                 updateCarouselControls();
             }
         }
 
         function nextBuilder() {
-            if (currentCarouselIndex < builderResults.length - 1) {
-                currentCarouselIndex++;
+            const sortedBuilders = getSortedBuilders();
+            const maxIndex = Math.max(0, sortedBuilders.length - 3);
+            if (currentCarouselIndex < maxIndex) {
+                currentCarouselIndex = Math.min(maxIndex, currentCarouselIndex + 3);
                 updateCarouselPosition();
                 updateCarouselControls();
             }
         }
 
         function loadCurrentBuilder() {
-            if (builderResults.length === 0 || currentCarouselIndex >= builderResults.length) {
-                alert('No builder selected');
+            const sortedBuilders = getSortedBuilders();
+            if (sortedBuilders.length === 0 || currentCarouselIndex >= sortedBuilders.length) {
+                alert('No builder selected. Click on a builder card first, or use the arrow buttons to navigate.');
                 return;
             }
             
-            const currentBuilder = builderResults[currentCarouselIndex];
+            // Get the first visible builder in the current view
+            const currentBuilder = sortedBuilders[currentCarouselIndex];
             editBuilder(currentBuilder.name);
         }
 
         function deleteCurrentBuilder() {
-            if (builderResults.length === 0 || currentCarouselIndex >= builderResults.length) {
-                alert('No builder selected');
+            const sortedBuilders = getSortedBuilders();
+            if (sortedBuilders.length === 0 || currentCarouselIndex >= sortedBuilders.length) {
+                alert('No builder selected. Click on a builder card first, or use the arrow buttons to navigate.');
                 return;
             }
             
-            const currentBuilder = builderResults[currentCarouselIndex];
+            // Get the first visible builder in the current view
+            const currentBuilder = sortedBuilders[currentCarouselIndex];
             removeBuilder(currentBuilder.name);
         }
 
