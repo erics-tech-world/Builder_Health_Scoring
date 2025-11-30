@@ -3,1163 +3,476 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CBUSA Builder Evaluation Tool</title>
+    <title>Robot Ranking Widget</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            margin: 20px;
-            background-color: #f5f5f5;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            padding: 20px;
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 30px;
         }
 
-        /* Warning Notice Styles */
-        .warning-notice {
-            background-color: #fff3cd;
-            border: 2px solid #ffc107;
-            border-radius: 8px;
+        .controls {
+            background: #1a1a1a;
             padding: 20px;
-            margin-bottom: 30px;
+            border-radius: 8px;
+            margin-bottom: 20px;
             display: flex;
-            align-items: flex-start;
+            flex-wrap: wrap;
             gap: 15px;
-            box-shadow: 0 2px 8px rgba(255, 193, 7, 0.2);
-        }
-        .warning-icon {
-            font-size: 32px;
-            flex-shrink: 0;
-        }
-        .warning-content h3 {
-            margin: 0 0 10px 0;
-            color: #856404;
-            font-size: 18px;
-        }
-        .warning-content p {
-            margin: 8px 0;
-            color: #856404;
-            font-size: 14px;
-            line-height: 1.5;
+            align-items: center;
         }
 
-        /* Table Styles */
-        .rubric-table {
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-box input {
             width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 30px;
-            font-size: 12px;
-        }
-        .rubric-table th,
-        .rubric-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
-        }
-        .rubric-table th {
-            background-color: #4CAF50;
-            color: white;
-            font-weight: bold;
-        }
-        .category-col {
-            text-align: left !important;
-            font-weight: bold;
-            background-color: #f9f9f9;
-            max-width: 200px;
-        }
-        .weight-col {
-            background-color: #e3f2fd;
-            font-weight: bold;
-        }
-        .score-5 { background-color: #4CAF50; color: white; }
-        .score-4 { background-color: #8BC34A; }
-        .score-3 { background-color: #FFC107; }
-        .score-2 { background-color: #FF9800; }
-        .score-1 { background-color: #F44336; color: white; }
-
-        /* Carousel Styles */
-        .carousel-section {
-            background-color: #e8f4fd;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 30px 0;
-            border: 2px solid #2196F3;
-        }
-        .carousel-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            margin-bottom: 20px;
-        }
-        .carousel-track-container {
-            overflow: hidden;
-            width: 1000px;
-            height: 220px;
-            position: relative;
-            border-radius: 8px;
-            background-color: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .carousel-track {
-            display: flex;
-            transition: transform 0.3s ease;
-            height: 100%;
-        }
-        .carousel-card {
-            min-width: 320px;
-            height: 200px;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 8px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            position: relative;
-            margin-right: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .carousel-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-        }
-        .carousel-card:active {
-            transform: translateY(-2px);
-        }
-        .carousel-card:last-child {
-            margin-right: 0;
-        }
-        .carousel-card h4 {
-            margin: 0 0 8px 0;
-            font-size: 18px;
-            text-align: center;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        .carousel-card .score-display {
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 8px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        .carousel-card .quick-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3px;
-            font-size: 10px;
-            opacity: 0.9;
-            line-height: 1.2;
-        }
-        .carousel-btn {
-            background-color: #2196F3;
-            color: white;
-            border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 0 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-        }
-        .carousel-btn:hover {
-            background-color: #1976D2;
-            transform: scale(1.1);
-        }
-        .carousel-btn:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .carousel-placeholder {
-            width: 1000px;
-            height: 220px;
-            margin: 0 auto;
-            border: 2px dashed #2196F3;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: rgba(33, 150, 243, 0.05);
-        }
-        .placeholder-content {
-            text-align: center;
-            color: #666;
-        }
-        .placeholder-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
-        .placeholder-content h4 {
-            margin: 0 0 10px 0;
-            color: #2196F3;
-            font-size: 20px;
-        }
-        .placeholder-content p {
-            margin: 5px 0;
+            padding: 10px 15px;
+            border: 1px solid #333;
+            border-radius: 6px;
+            background: #0a0a0a;
+            color: #e0e0e0;
             font-size: 14px;
-            line-height: 1.4;
         }
 
-        /* Calculator Styles */
-        .calculator {
-            background-color: #f0f8ff;
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            margin-top: 20px;
-        }
-        .calculator h3 {
-            color: #333;
-            margin-top: 0;
-        }
-        .builder-name-input {
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: white;
-            border-radius: 6px;
-            border: 2px solid #2196F3;
-        }
-        .builder-name-input label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            font-size: 16px;
-            color: #333;
-        }
-        .builder-name-input input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-        .calc-row {
-            margin-bottom: 15px;
-            padding: 10px;
-            background-color: white;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-        }
-        .calc-row label {
-            font-weight: bold;
-            color: #333;
-            display: block;
-            margin-bottom: 5px;
-        }
-        .calc-row-content {
+        .filter-group {
             display: flex;
-            align-items: center;
             gap: 10px;
             flex-wrap: wrap;
         }
-        .calc-row select {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            min-width: 200px;
-        }
-        .calc-row .points {
-            font-weight: bold;
-            color: #333;
-            min-width: 60px;
-        }
 
-        /* Button Styles */
-        .total-score {
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px;
-            text-align: center;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
-        .button-row {
-            text-align: center;
-            margin-top: 15px;
-        }
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
+        select {
+            padding: 10px 15px;
+            border: 1px solid #333;
+            border-radius: 6px;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            font-size: 14px;
             cursor: pointer;
-            font-weight: bold;
-            margin: 0 5px;
-        }
-        .btn-primary {
-            background-color: #2196F3;
-            color: white;
-        }
-        .btn-secondary {
-            background-color: #FF9800;
-            color: white;
-        }
-        .btn-purple {
-            background-color: #9C27B0;
-            color: white;
-        }
-        .btn-success {
-            background-color: #4CAF50;
-            color: white;
-        }
-        .btn-danger {
-            background-color: #F44336;
-            color: white;
-        }
-        .btn:hover {
-            opacity: 0.9;
         }
 
-        /* Results Styles */
-        .results-section {
-            background-color: #f9f9f9;
+        .robot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .robot-card {
+            background: #1a1a1a;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #333;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .robot-card:hover {
+            transform: translateY(-4px);
+            border-color: #3b82f6;
+        }
+
+        .robot-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #0a0a0a;
+        }
+
+        .robot-content {
             padding: 20px;
-            border-radius: 8px;
-            margin-top: 30px;
-            border: 2px solid #4CAF50;
-            display: none;
         }
-        .results-section h3 {
-            color: #333;
-            border-bottom: 2px solid #4CAF50;
-            padding-bottom: 10px;
-            margin-top: 0;
-        }
-        .builder-result {
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .builder-name {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
+
+        .robot-header {
             margin-bottom: 10px;
         }
-        .builder-score {
+
+        .robot-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #3b82f6;
+            margin-bottom: 5px;
+        }
+
+        .robot-brand {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .robot-price {
             font-size: 24px;
-            font-weight: bold;
+            font-weight: 700;
+            color: #7cfc00;
+            margin: 15px 0;
+        }
+
+        .robot-category {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #333;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 10px;
+        }
+
+        .robot-features {
+            margin: 15px 0;
+        }
+
+        .feature-tag {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 4px;
+            font-size: 11px;
+            margin: 2px;
+            color: #aaa;
+        }
+
+        .robot-links {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
             padding: 10px;
             border-radius: 6px;
             text-align: center;
-            margin-bottom: 10px;
-        }
-        .score-excellent { background-color: #4CAF50; color: white; }
-        .score-good { background-color: #8BC34A; color: white; }
-        .score-average { background-color: #FFC107; color: black; }
-        .score-below-average { background-color: #FF9800; color: white; }
-        .score-poor { background-color: #F44336; color: white; }
-        .score-details {
-            font-size: 12px;
-            color: #666;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: opacity 0.2s;
         }
 
-        .rating-scale {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #fff3e0;
-            border-radius: 8px;
+        .btn:hover {
+            opacity: 0.8;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #333;
+            color: #e0e0e0;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .status-available {
+            background: #7cfc00;
+            color: #0a0a0a;
+        }
+
+        .status-preorder {
+            background: #fbbf24;
+            color: #0a0a0a;
+        }
+
+        .status-concept {
+            background: #6b7280;
+            color: white;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .filter-group {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            select {
+                flex: 1;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>CBUSA Builder Evaluation Rubric</h1>
-        
-        <!-- Important Notice -->
-        <div class="warning-notice">
-            <div class="warning-icon">⚠️</div>
-            <div class="warning-content">
-                <h3>Important Notice</h3>
-                <p><strong>Your data is not automatically saved!</strong> If you leave this page or refresh your browser, all entered builder scores will be lost.</p>
-                <p><strong>Recommendation:</strong> Complete all your builder entries in one session, then use the "Export to Excel" button to save your results permanently.</p>
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search robots...">
             </div>
-        </div>
-        
-        <table class="rubric-table">
-            <thead>
-                <tr>
-                    <th class="category-col">Category</th>
-                    <th class="score-1">1 (Poor)</th>
-                    <th class="score-2">2 (Below Average)</th>
-                    <th class="score-3">3 (Average)</th>
-                    <th class="score-4">4 (Good)</th>
-                    <th class="score-5">5 (Excellent)</th>
-                    <th class="weight-col">Weight</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="category-col">National contracts enrolled</td>
-                    <td class="score-1">3-1</td>
-                    <td class="score-2">4-3</td>
-                    <td class="score-3">5-7</td>
-                    <td class="score-4">8-10</td>
-                    <td class="score-5">>10</td>
-                    <td class="weight-col">9</td>
-                </tr>
-                <tr>
-                    <td class="category-col">National contracts reported (avg last 4 quarters)</td>
-                    <td class="score-1">3-1</td>
-                    <td class="score-2">4-3</td>
-                    <td class="score-3">5-4</td>
-                    <td class="score-4">8-6</td>
-                    <td class="score-5">>8</td>
-                    <td class="weight-col">9</td>
-                </tr>
-                <tr>
-                    <td class="category-col"># of local vendors used (last 4 quarters)</td>
-                    <td class="score-1">3-1</td>
-                    <td class="score-2">6-4</td>
-                    <td class="score-3">9-7</td>
-                    <td class="score-4">11-10</td>
-                    <td class="score-5">>12</td>
-                    <td class="weight-col">7</td>
-                </tr>
-                <tr>
-                    <td class="category-col">% of annual revenue made in rebates</td>
-                    <td class="score-1">0-0.1%</td>
-                    <td class="score-2">0.1-0.5%</td>
-                    <td class="score-3">0.5-1%</td>
-                    <td class="score-4">1-2%</td>
-                    <td class="score-5">>2%</td>
-                    <td class="weight-col">9</td>
-                </tr>
-                <tr>
-                    <td class="category-col">% of events attended</td>
-                    <td class="score-1">0-25%</td>
-                    <td class="score-2">25-50%</td>
-                    <td class="score-3">50-75%</td>
-                    <td class="score-4">75-99%</td>
-                    <td class="score-5">100%</td>
-                    <td class="weight-col">9</td>
-                </tr>
-                <tr>
-                    <td class="category-col">% of GM meetings attended</td>
-                    <td class="score-1">0-25%</td>
-                    <td class="score-2">26-50%</td>
-                    <td class="score-3">51-75%</td>
-                    <td class="score-4">76-99%</td>
-                    <td class="score-5">100%</td>
-                    <td class="weight-col">9</td>
-                </tr>
-                <tr>
-                    <td class="category-col">Payment discrepancies (past 12 months)</td>
-                    <td class="score-1">>5 late payments</td>
-                    <td class="score-2">4-5 late payments</td>
-                    <td class="score-3">2-3 late payments</td>
-                    <td class="score-4">1 late payment</td>
-                    <td class="score-5">0 late payments</td>
-                    <td class="weight-col">10</td>
-                </tr>
-                <tr>
-                    <td class="category-col">Builder Reporting?</td>
-                    <td class="score-1">No</td>
-                    <td class="score-2">-</td>
-                    <td class="score-3">-</td>
-                    <td class="score-4">-</td>
-                    <td class="score-5">Yes</td>
-                    <td class="weight-col">6</td>
-                </tr>
-                <tr>
-                    <td class="category-col"># of homes built annually</td>
-                    <td class="score-1">0</td>
-                    <td class="score-2">3-1</td>
-                    <td class="score-3">7-4</td>
-                    <td class="score-4">19-8</td>
-                    <td class="score-5">>20</td>
-                    <td class="weight-col">6</td>
-                </tr>
-                <tr>
-                    <td class="category-col">Average $ of each project</td>
-                    <td class="score-1">$0-$100K</td>
-                    <td class="score-2">$100K-$400K</td>
-                    <td class="score-3">$400K-$750K</td>
-                    <td class="score-4">$750K-$1.5M</td>
-                    <td class="score-5">>$1.5M</td>
-                    <td class="weight-col">6</td>
-                </tr>
-                <tr>
-                    <td class="category-col">Total annual revenue</td>
-                    <td class="score-1"><$30M</td>
-                    <td class="score-2">-</td>
-                    <td class="score-3">-</td>
-                    <td class="score-4">-</td>
-                    <td class="score-5">>$30M</td>
-                    <td class="weight-col">6</td>
-                </tr>
-                <tr>
-                    <td class="category-col">% of committed buys participated</td>
-                    <td class="score-1">0%</td>
-                    <td class="score-2">25%</td>
-                    <td class="score-3">50%</td>
-                    <td class="score-4">75%</td>
-                    <td class="score-5">100%</td>
-                    <td class="weight-col">7</td>
-                </tr>
-                <tr>
-                    <td class="category-col">Total Rebates</td>
-                    <td class="score-1"><0</td>
-                    <td class="score-2">0</td>
-                    <td class="score-3">10-1</td>
-                    <td class="score-4">25-11</td>
-                    <td class="score-5">>25</td>
-                    <td class="weight-col">7</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- Builder Carousel Section -->
-        <div class="carousel-section" id="carousel-section">
-            <h3 style="color: #333; text-align: center; margin-bottom: 20px;">🔄 Quick Edit Builders</h3>
-            
-            <!-- Placeholder for when no builders exist -->
-            <div class="carousel-placeholder" id="carousel-placeholder">
-                <div class="placeholder-content">
-                    <div class="placeholder-icon">📋</div>
-                    <h4>Builder Carousel</h4>
-                    <p>After you submit builders below, they'll appear here for quick editing.</p>
-                    <p>Use the arrows to scroll through your builders and edit them efficiently!</p>
-                </div>
-            </div>
-            
-            <!-- Actual carousel (hidden initially) -->
-            <div class="carousel-container" id="carousel-container" style="display: none;">
-                <button class="carousel-btn carousel-btn-left" onclick="previousBuilder()" id="prev-btn">‹</button>
-                
-                <div class="carousel-track-container">
-                    <div class="carousel-track" id="carousel-track">
-                        <!-- Builder cards will be inserted here -->
-                    </div>
-                </div>
-                
-                <button class="carousel-btn carousel-btn-right" onclick="nextBuilder()" id="next-btn">›</button>
-            </div>
-            
-            <!-- Simple controls -->
-            <div id="carousel-controls" style="display: none; text-align: center; margin-top: 20px; padding: 15px; background: #f0f0f0; border-radius: 8px;">
-                <div style="margin-bottom: 15px;">
-                    <span id="carousel-counter" style="font-weight: bold;">1 of 1</span>
-                </div>
-                <div style="margin-bottom: 15px;">
-                    <label for="sort-dropdown" style="margin-right: 10px; font-weight: bold;">Sort by:</label>
-                    <select id="sort-dropdown" onchange="changeSortOrder()" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-                        <option value="date_newest">Date Added (Newest First)</option>
-                        <option value="date_oldest">Date Added (Oldest First)</option>
-                        <option value="alpha_az">Alphabetical A-Z</option>
-                        <option value="alpha_za">Alphabetical Z-A</option>
-                        <option value="score_high">Score (Highest First)</option>
-                        <option value="score_low">Score (Lowest First)</option>
-                    </select>
-                </div>
-                <div>
-                    <button class="btn btn-primary" onclick="loadCurrentBuilder()" style="margin-right: 10px;">📝 Edit First Visible</button>
-                    <button class="btn btn-danger" onclick="deleteCurrentBuilder()">🗑️ Delete First Visible</button>
-                </div>
+            <div class="filter-group">
+                <select id="categoryFilter">
+                    <option value="">All Categories</option>
+                </select>
+                <select id="priceFilter">
+                    <option value="">All Prices</option>
+                    <option value="0-99">Under $100</option>
+                    <option value="100-299">$100-$299</option>
+                    <option value="300-499">$300-$499</option>
+                    <option value="500-999">$500-$999</option>
+                    <option value="1000-9999">$1000+</option>
+                </select>
+                <select id="statusFilter">
+                    <option value="">All Status</option>
+                    <option value="available">Available</option>
+                    <option value="preorder">Pre-order</option>
+                    <option value="concept">Concept</option>
+                </select>
+                <select id="sortBy">
+                    <option value="name">Sort: A-Z</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                </select>
             </div>
         </div>
 
-        <div class="calculator">
-            <h3>Score Calculator</h3>
-            
-            <div class="builder-name-input">
-                <label for="builder-name">Builder Name:</label>
-                <input type="text" id="builder-name" placeholder="Enter builder name (e.g., ABC Construction)">
-            </div>
-            
-            <div id="calculator-rows"></div>
-            
-            <div class="total-score" id="total-score">
-                Total Score: 0 / 500
-            </div>
-            
-            <div class="button-row">
-                <button class="btn btn-primary" onclick="submitBuilder()">📊 Submit Builder Score</button>
-                <button class="btn btn-secondary" onclick="clearForm()">🔄 Clear Form</button>
-                <button class="btn btn-purple" style="display: none;" onclick="editLastBuilder()" id="edit-last-btn">✏️ Edit Last Builder</button>
-            </div>
-        </div>
-
-        <div class="results-section" id="results-section">
-            <h3>🏆 Builder Scores Summary</h3>
-            <div id="builder-list"></div>
-            <div class="button-row">
-                <button class="btn btn-success" onclick="exportResults()">📥 Export to Excel</button>
-                <button class="btn" style="background-color: #17a2b8; color: white;" onclick="exportDetailedResults()">📊 Export Detailed Report</button>
-                <button class="btn btn-danger" onclick="clearAllResults()">🗑️ Clear All Results</button>
-            </div>
-        </div>
-
-        <div class="rating-scale">
-            <h3>Rating Scale</h3>
-            <p><strong>Total Possible Points:</strong> 500</p>
-            <p><strong>Scoring Ranges:</strong></p>
-            <ul>
-                <li><strong>400-500:</strong> Excellent Partnership</li>
-                <li><strong>350-399:</strong> Good Partnership</li>
-                <li><strong>300-349:</strong> Average Partnership</li>
-                <li><strong>200-299:</strong> Below Average Partnership</li>
-                <li><strong>100-199:</strong> Poor Partnership</li>
-            </ul>
-        </div>
+        <div class="robot-grid" id="robotGrid"></div>
     </div>
 
     <script>
-        const categories = [
-            {name: "National contracts enrolled", weight: 9},
-            {name: "National contracts reported (avg last 4 quarters)", weight: 9},
-            {name: "# of local vendors used (last 4 quarters)", weight: 7},
-            {name: "% of annual revenue made in rebates", weight: 9},
-            {name: "% of events attended", weight: 9},
-            {name: "% of GM meetings attended", weight: 9},
-            {name: "Payment discrepancies (past 12 months)", weight: 10},
-            {name: "Builder Reporting?", weight: 6},
-            {name: "# of homes built annually", weight: 6},
-            {name: "Average $ of each project", weight: 6},
-            {name: "Total annual revenue", weight: 6},
-            {name: "% of committed buys participated", weight: 7},
-            {name: "Total Rebates", weight: 7}
+        // Robot data - Edit this to update robots
+        const robots = [
+            {
+                name: "EMO",
+                brand: "Living.ai",
+                category: "Desktop Companion",
+                price: "$279-$379",
+                priceMin: 279,
+                priceMax: 379,
+                features: ["ChatGPT integration", "Facial recognition", "1000+ expressions"],
+                amazonAvailable: true,
+                amazonLink: "https://www.amazon.com/s?k=EMO+robot",
+                officialLink: "https://living.ai/emo/",
+                status: "available",
+                image: "https://m.media-amazon.com/images/I/61naQ2g9hSL._AC_SY355_.jpg"
+            },
+            {
+                name: "AIBI Pocket Pet",
+                brand: "Living.ai",
+                category: "Portable Companion",
+                price: "~$299",
+                priceMin: 299,
+                priceMax: 299,
+                features: ["Wearable/portable", "ChatGPT powered", "Magnetic attachment"],
+                amazonAvailable: false,
+                officialLink: "https://living.ai/store/",
+                status: "available",
+                image: "https://m.media-amazon.com/images/I/61naQ2g9hSL._AC_SY355_.jpg"
+            },
+            {
+                name: "Loona",
+                brand: "KEYi Tech",
+                category: "Pet Robot",
+                price: "$449-$499",
+                priceMin: 449,
+                priceMax: 499,
+                features: ["ChatGPT-4o", "Dog-like movements", "Home monitoring camera"],
+                amazonAvailable: true,
+                amazonLink: "https://www.amazon.com/s?k=Loona+robot",
+                officialLink: "https://www.amazon.com/s?k=Loona+robot",
+                status: "available",
+                image: "https://m.media-amazon.com/images/I/71D9dLT8xfL._AC_SY355_.jpg"
+            },
+            {
+                name: "Vector 2.0",
+                brand: "Digital Dream Labs",
+                category: "Home Assistant",
+                price: "$399",
+                priceMin: 399,
+                priceMax: 399,
+                features: ["Alexa integration", "Facial recognition", "Smart home control"],
+                amazonAvailable: true,
+                amazonLink: "https://www.amazon.com/s?k=Vector+2.0+robot",
+                officialLink: "https://anki.bot/products/vector-robot",
+                status: "available",
+                image: "https://m.media-amazon.com/images/I/61Jl3ES-OdL._AC_SX679_.jpg"
+            },
+            {
+                name: "Eilik",
+                brand: "Energize Lab",
+                category: "Desktop Companion",
+                price: "$129-$140",
+                priceMin: 129,
+                priceMax: 140,
+                features: ["Touch-sensitive", "Emotional expressions", "Multi-robot connectivity"],
+                amazonAvailable: true,
+                amazonLink: "https://www.amazon.com/s?k=Eilik+robot",
+                officialLink: "https://store.energizelab.com/products/eilik",
+                status: "available",
+                image: "https://m.media-amazon.com/images/I/61S5yB6XsXL._AC_SX679_.jpg"
+            },
+            {
+                name: "Sony Aibo",
+                brand: "Sony",
+                category: "Premium Pet Robot",
+                price: "~$2,900",
+                priceMin: 2900,
+                priceMax: 2900,
+                features: ["Premium robot dog", "Learning AI", "100 face recognition"],
+                amazonAvailable: true,
+                amazonLink: "https://www.amazon.com/s?k=Sony+Aibo",
+                officialLink: "https://us.aibo.com/",
+                status: "available",
+                image: "https://m.media-amazon.com/images/I/61pZqY5oJyL._AC_SX679_.jpg"
+            },
+            {
+                name: "Moflin",
+                brand: "Casio",
+                category: "Pet Robot",
+                price: "$429",
+                priceMin: 429,
+                priceMax: 429,
+                features: ["Soft AI pet", "Emotional bonding", "40,000+ personality patterns"],
+                amazonAvailable: true,
+                amazonLink: "https://www.amazon.com/s?k=Moflin",
+                officialLink: "https://www.casio.com/us/moflin/",
+                status: "available",
+                image: "https://m.media-amazon.com/images/I/71wqY8qrOqL._AC_SX679_.jpg"
+            },
+            {
+                name: "Yonbo",
+                brand: "X-Origin",
+                category: "Pet Robot",
+                price: "$599.99",
+                priceMin: 599,
+                priceMax: 599,
+                features: ["Bionic cat", "Fully autonomous", "Raspberry Pi powered"],
+                amazonAvailable: true,
+                amazonLink: "https://amzn.to/48aPsYj",
+                officialLink: "https://amzn.to/48aPsYj",
+                status: "available",
+                image: "https://i.imgur.com/4j19KOV.webp"
+            }
         ];
 
-        let builderResults = [];
-        let currentCarouselIndex = 0;
-        let currentSortOrder = 'date_newest';
-        let builderBeingEdited = null; // Track which builder is currently being edited
+        let filteredRobots = [...robots];
 
-        function createCalculator() {
-            const container = document.getElementById('calculator-rows');
-            container.innerHTML = '';
+        function renderRobots(robotsToRender) {
+            const grid = document.getElementById('robotGrid');
             
-            const criteria = {
-                "National contracts enrolled": ["3-1", "4-3", "5-7", "8-10", ">10"],
-                "National contracts reported (avg last 4 quarters)": ["3-1", "4-3", "5-4", "8-6", ">8"],
-                "# of local vendors used (last 4 quarters)": ["3-1", "6-4", "9-7", "11-10", ">12"],
-                "% of annual revenue made in rebates": ["0-0.1%", "0.1-0.5%", "0.5-1%", "1-2%", ">2%"],
-                "% of events attended": ["0-25%", "25-50%", "50-75%", "75-99%", "100%"],
-                "% of GM meetings attended": ["0-25%", "26-50%", "51-75%", "76-99%", "100%"],
-                "Payment discrepancies (past 12 months)": [">5 late payments", "4-5 late payments", "2-3 late payments", "1 late payment", "0 late payments"],
-                "Builder Reporting?": ["No", "-", "-", "-", "Yes"],
-                "# of homes built annually": ["0", "3-1", "7-4", "19-8", ">20"],
-                "Average $ of each project": ["$0-$100K", "$100K-$400K", "$400K-$750K", "$750K-$1.5M", ">$1.5M"],
-                "Total annual revenue": ["<$30M", "-", "-", "-", ">$30M"],
-                "% of committed buys participated": ["0%", "25%", "50%", "75%", "100%"],
-                "Total Rebates": ["<0", "0", "10-1", "25-11", ">25"]
-            };
-            
-            categories.forEach((category, index) => {
-                const row = document.createElement('div');
-                row.className = 'calc-row';
-                
-                const categoryName = category.name;
-                const categoryWeight = category.weight;
-                const scoreCriteria = criteria[categoryName] || [];
-                
-                row.innerHTML = `
-                    <label>${categoryName} (Weight: ${categoryWeight})</label>
-                    <div class="calc-row-content">
-                        <select id="score-${index}" onchange="calculateTotal()">
-                            <option value="0">Select Score...</option>
-                            <option value="1">1 - ${scoreCriteria[0] || 'Poor'}</option>
-                            <option value="2">2 - ${scoreCriteria[1] || 'Below Average'}</option>
-                            <option value="3">3 - ${scoreCriteria[2] || 'Average'}</option>
-                            <option value="4">4 - ${scoreCriteria[3] || 'Good'}</option>
-                            <option value="5">5 - ${scoreCriteria[4] || 'Excellent'}</option>
-                        </select>
-                        <span class="points" id="points-${index}">0 pts</span>
-                    </div>
-                `;
-                container.appendChild(row);
-            });
-        }
-
-        function calculateTotal() {
-            let total = 0;
-            categories.forEach((category, index) => {
-                const scoreSelect = document.getElementById(`score-${index}`);
-                const pointsSpan = document.getElementById(`points-${index}`);
-                
-                const score = parseInt(scoreSelect.value) || 0;
-                const points = score * category.weight;
-                total += points;
-                
-                pointsSpan.textContent = `${points} pts`;
-            });
-            
-            document.getElementById('total-score').textContent = `Total Score: ${total} / 500`;
-            return total;
-        }
-
-        function submitBuilder() {
-            const builderName = document.getElementById('builder-name').value.trim();
-            if (!builderName) {
-                return; // Just return silently, no alert
-            }
-
-            const total = calculateTotal();
-            if (total === 0) {
-                return; // Just return silently, no alert
-            }
-
-            const existingBuilder = builderResults.find(b => b.name.toLowerCase() === builderName.toLowerCase());
-            if (existingBuilder) {
-                // Silently update existing builder without confirmation
-                builderResults = builderResults.filter(b => b.name.toLowerCase() !== builderName.toLowerCase());
-            }
-
-            const scores = {};
-            categories.forEach((category, index) => {
-                const scoreSelect = document.getElementById(`score-${index}`);
-                scores[category.name] = parseInt(scoreSelect.value) || 0;
-            });
-
-            const builderResult = {
-                name: builderName,
-                total: total,
-                scores: scores,
-                timestamp: new Date()
-            };
-
-            builderResults.push(builderResult);
-            displayResults();
-            clearForm();
-            
-            document.getElementById('edit-last-btn').style.display = 'inline-block';
-            // Removed success alert
-        }
-
-        function clearForm() {
-            // Clear the editing state without restoring (since we're clearing intentionally)
-            builderBeingEdited = null;
-            
-            document.getElementById('builder-name').value = '';
-            categories.forEach((category, index) => {
-                document.getElementById(`score-${index}`).value = 0;
-                document.getElementById(`points-${index}`).textContent = '0 pts';
-            });
-            document.getElementById('total-score').textContent = 'Total Score: 0 / 500';
-            document.getElementById('edit-last-btn').style.display = 'none';
-        }
-
-        function getSortedBuilders() {
-            const sorted = [...builderResults];
-            
-            switch (currentSortOrder) {
-                case 'date_newest':
-                    return sorted.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-                case 'date_oldest':
-                    return sorted.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-                case 'alpha_az':
-                    return sorted.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
-                case 'alpha_za':
-                    return sorted.sort((a, b) => b.name.toLowerCase().localeCompare(a.name.toLowerCase()));
-                case 'score_high':
-                    return sorted.sort((a, b) => b.total - a.total);
-                case 'score_low':
-                    return sorted.sort((a, b) => a.total - b.total);
-                default:
-                    return sorted;
-            }
-        }
-
-        function changeSortOrder() {
-            const dropdown = document.getElementById('sort-dropdown');
-            currentSortOrder = dropdown.value;
-            currentCarouselIndex = 0;
-            updateCarousel();
-        }
-
-        function updateCarousel() {
-            const carouselContainer = document.getElementById('carousel-container');
-            const carouselControls = document.getElementById('carousel-controls');
-            const carouselPlaceholder = document.getElementById('carousel-placeholder');
-            const carouselTrack = document.getElementById('carousel-track');
-            
-            if (builderResults.length === 0) {
-                carouselPlaceholder.style.display = 'flex';
-                carouselContainer.style.display = 'none';
-                carouselControls.style.display = 'none';
+            if (robotsToRender.length === 0) {
+                grid.innerHTML = '<div class="no-results">No robots found matching your criteria</div>';
                 return;
             }
-            
-            carouselPlaceholder.style.display = 'none';
-            carouselContainer.style.display = 'flex';
-            carouselControls.style.display = 'block';
-            
-            const sortedBuilders = getSortedBuilders();
-            
-            if (currentCarouselIndex >= sortedBuilders.length) {
-                currentCarouselIndex = Math.max(0, sortedBuilders.length - 3);
-            }
-            if (currentCarouselIndex < 0) {
-                currentCarouselIndex = 0;
-            }
-            
-            carouselTrack.innerHTML = sortedBuilders.map((builder, index) => {
-                return `
-                    <div class="carousel-card" onclick="editBuilder('${builder.name}')" title="Click to edit ${builder.name}">
-                        <h4>${builder.name}</h4>
-                        <div class="score-display">${builder.total} / 500</div>
-                        <div class="quick-stats">
-                            <div>Payment: ${builder.scores['Payment discrepancies (past 12 months)']} → ${builder.scores['Payment discrepancies (past 12 months)'] * 10}pts</div>
-                            <div>Events: ${builder.scores['% of events attended']} → ${builder.scores['% of events attended'] * 9}pts</div>
-                            <div>GM Meetings: ${builder.scores['% of GM meetings attended']} → ${builder.scores['% of GM meetings attended'] * 9}pts</div>
-                            <div>Contracts: ${builder.scores['National contracts enrolled']} → ${builder.scores['National contracts enrolled'] * 9}pts</div>
-                            <div>Rebate %: ${builder.scores['% of annual revenue made in rebates']} → ${builder.scores['% of annual revenue made in rebates'] * 9}pts</div>
-                            <div>Reporting: ${builder.scores['National contracts reported (avg last 4 quarters)']} → ${builder.scores['National contracts reported (avg last 4 quarters)'] * 9}pts</div>
+
+            grid.innerHTML = robotsToRender.map(robot => `
+                <div class="robot-card">
+                    <img src="${robot.image}" alt="${robot.name}" class="robot-image" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22%3E%3Crect fill=%22%231a1a1a%22 width=%22300%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23888%22%3ENo Image%3C/text%3E%3C/svg%3E'">
+                    <div class="robot-content">
+                        <div class="robot-header">
+                            <div class="robot-name">
+                                ${robot.name}
+                                <span class="status-badge status-${robot.status}">
+                                    ${robot.status.charAt(0).toUpperCase() + robot.status.slice(1)}
+                                </span>
+                            </div>
+                            <div class="robot-brand">${robot.brand}</div>
                         </div>
-                        <div style="position: absolute; bottom: 5px; right: 8px; font-size: 10px; opacity: 0.7;">
-                            ✏️ Click to edit
+                        <div class="robot-category">${robot.category}</div>
+                        <div class="robot-price">${robot.price}</div>
+                        <div class="robot-features">
+                            ${robot.features.map(f => `<span class="feature-tag">${f}</span>`).join('')}
+                        </div>
+                        <div class="robot-links">
+                            ${robot.amazonAvailable ? 
+                                `<a href="${robot.amazonLink}" target="_blank" class="btn btn-primary">View on Amazon</a>` :
+                                `<a href="${robot.officialLink}" target="_blank" class="btn btn-primary">Official Site</a>`
+                            }
                         </div>
                     </div>
-                `;
-            }).join('');
-            
-            updateCarouselPosition();
-            updateCarouselControls();
+                </div>
+            `).join('');
         }
 
-        function updateCarouselPosition() {
-            const carouselTrack = document.getElementById('carousel-track');
-            const translateX = -currentCarouselIndex * 330;
-            carouselTrack.style.transform = `translateX(${translateX}px)`;
-        }
+        function filterAndSort() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            const priceRange = document.getElementById('priceFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            const sortBy = document.getElementById('sortBy').value;
 
-        function updateCarouselControls() {
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
-            const counter = document.getElementById('carousel-counter');
-            
-            const sortedBuilders = getSortedBuilders();
-            const totalBuilders = sortedBuilders.length;
-            const maxIndex = Math.max(0, totalBuilders - 3);
-            
-            prevBtn.disabled = currentCarouselIndex === 0;
-            nextBtn.disabled = currentCarouselIndex >= maxIndex;
-            
-            const startBuilder = currentCarouselIndex + 1;
-            const endBuilder = Math.min(currentCarouselIndex + 3, totalBuilders);
-            
-            if (totalBuilders <= 3) {
-                counter.textContent = `Showing all ${totalBuilders} builders`;
-            } else {
-                counter.textContent = `Showing ${startBuilder}-${endBuilder} of ${totalBuilders}`;
-            }
-        }
-
-        function previousBuilder() {
-            if (currentCarouselIndex > 0) {
-                currentCarouselIndex = Math.max(0, currentCarouselIndex - 3);
-                updateCarouselPosition();
-                updateCarouselControls();
-            }
-        }
-
-        function nextBuilder() {
-            const sortedBuilders = getSortedBuilders();
-            const maxIndex = Math.max(0, sortedBuilders.length - 3);
-            if (currentCarouselIndex < maxIndex) {
-                currentCarouselIndex = Math.min(maxIndex, currentCarouselIndex + 3);
-                updateCarouselPosition();
-                updateCarouselControls();
-            }
-        }
-
-        function loadCurrentBuilder() {
-            const sortedBuilders = getSortedBuilders();
-            if (sortedBuilders.length === 0 || currentCarouselIndex >= sortedBuilders.length) {
-                return; // Silently return if no builder
-            }
-            
-            const currentBuilder = sortedBuilders[currentCarouselIndex];
-            editBuilder(currentBuilder.name);
-        }
-
-        function deleteCurrentBuilder() {
-            const sortedBuilders = getSortedBuilders();
-            if (sortedBuilders.length === 0 || currentCarouselIndex >= sortedBuilders.length) {
-                return; // Silently return if no builder
-            }
-            
-            const currentBuilder = sortedBuilders[currentCarouselIndex];
-            removeBuilder(currentBuilder.name);
-        }
-
-        function displayResults() {
-            const resultsSection = document.getElementById('results-section');
-            const builderList = document.getElementById('builder-list');
-            
-            resultsSection.style.display = 'block';
-            updateCarousel();
-            
-            const sortedResults = [...builderResults].sort((a, b) => b.total - a.total);
-            
-            builderList.innerHTML = sortedResults.map((result, index) => {
-                const scoreClass = getScoreClass(result.total);
-                const rank = index + 1;
-                const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
+            filteredRobots = robots.filter(robot => {
+                const matchesSearch = robot.name.toLowerCase().includes(searchTerm) ||
+                                    robot.brand.toLowerCase().includes(searchTerm) ||
+                                    robot.features.some(f => f.toLowerCase().includes(searchTerm));
+                const matchesCategory = !category || robot.category === category;
+                const matchesStatus = !status || robot.status === status;
                 
-                return `
-                    <div class="builder-result">
-                        <div class="builder-name">${medal} ${result.name}</div>
-                        <div class="builder-score ${scoreClass}">${result.total} / 500 points</div>
-                        <div class="score-details">
-                            <div><strong>Payment discrepancies:</strong> ${result.scores['Payment discrepancies (past 12 months)']} × 10 = ${result.scores['Payment discrepancies (past 12 months)'] * 10} pts</div>
-                            <div><strong>Events attended:</strong> ${result.scores['% of events attended']} × 9 = ${result.scores['% of events attended'] * 9} pts</div>
-                            <div><strong>GM meetings:</strong> ${result.scores['% of GM meetings attended']} × 9 = ${result.scores['% of GM meetings attended'] * 9} pts</div>
-                            <div><strong>National contracts:</strong> ${result.scores['National contracts enrolled']} × 9 = ${result.scores['National contracts enrolled'] * 9} pts</div>
-                            <div><strong>Rebate revenue %:</strong> ${result.scores['% of annual revenue made in rebates']} × 9 = ${result.scores['% of annual revenue made in rebates'] * 9} pts</div>
-                            <div><strong>Contract reporting:</strong> ${result.scores['National contracts reported (avg last 4 quarters)']} × 9 = ${result.scores['National contracts reported (avg last 4 quarters)'] * 9} pts</div>
-                        </div>
-                        <button onclick="editBuilder('${result.name}')" class="btn btn-purple" style="margin-top: 10px; font-size: 12px; padding: 5px 10px; margin-right: 5px;">
-                            ✏️ Edit
-                        </button>
-                        <button onclick="removeBuilder('${result.name}')" class="btn btn-danger" style="margin-top: 10px; font-size: 12px; padding: 5px 10px;">
-                            🗑️ Remove
-                        </button>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function getScoreClass(score) {
-            if (score >= 400) return 'score-excellent';
-            if (score >= 350) return 'score-good';
-            if (score >= 300) return 'score-average';
-            if (score >= 200) return 'score-below-average';
-            return 'score-poor';
-        }
-
-        function editBuilder(builderName) {
-            const builderToEdit = builderResults.find(b => b.name === builderName);
-            if (!builderToEdit) {
-                return; // Silently return if builder not found
-            }
-
-            // If there's already a builder being edited, restore them first
-            if (builderBeingEdited) {
-                // Only restore if it's not the same builder we're trying to edit
-                if (builderBeingEdited.name !== builderName) {
-                    builderResults.push(builderBeingEdited);
+                let matchesPrice = true;
+                if (priceRange) {
+                    const [min, max] = priceRange.split('-').map(Number);
+                    matchesPrice = robot.priceMin >= min && robot.priceMin <= max;
                 }
-            }
 
-            // Store the builder being edited (make a copy of the original state)
-            builderBeingEdited = { ...builderToEdit }; 
-            
-            // Remove from visible results
-            builderResults = builderResults.filter(b => b.name !== builderName);
-
-            // Load into form
-            document.getElementById('builder-name').value = builderToEdit.name;
-            
-            categories.forEach((category, index) => {
-                const scoreSelect = document.getElementById(`score-${index}`);
-                scoreSelect.value = builderToEdit.scores[category.name];
-            });
-            
-            if (builderResults.length === 0) {
-                document.getElementById('results-section').style.display = 'none';
-            } else {
-                displayResults();
-            }
-            
-            calculateTotal();
-            document.getElementById('edit-last-btn').style.display = 'inline-block';
-            
-            document.querySelector('.calculator').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function editLastBuilder() {
-            if (builderResults.length === 0) {
-                return; // Silently return if no builders
-            }
-
-            const lastBuilder = builderResults[builderResults.length - 1];
-            editBuilder(lastBuilder.name);
-        }
-
-        function removeBuilder(builderName) {
-            // Silently remove without confirmation
-            builderResults = builderResults.filter(b => b.name !== builderName);
-            if (builderResults.length === 0) {
-                document.getElementById('results-section').style.display = 'none';
-                updateCarousel();
-            } else {
-                displayResults();
-            }
-        }
-
-        function clearAllResults() {
-            // Silently clear all without confirmation
-            builderResults = [];
-            currentCarouselIndex = 0;
-            document.getElementById('results-section').style.display = 'none';
-            updateCarousel();
-        }
-
-        function exportResults() {
-            if (builderResults.length === 0) {
-                return; // Silently return if no results
-            }
-
-            let csv = 'Rank,Builder Name,Total Score,';
-            csv += categories.map(cat => `"${cat.name} Score"`).join(',') + ',';
-            csv += categories.map(cat => `"${cat.name} Points"`).join(',') + '\n';
-
-            const sortedResults = [...builderResults].sort((a, b) => b.total - a.total);
-            
-            sortedResults.forEach((result, index) => {
-                csv += `${index + 1},"${result.name}",${result.total},`;
-                csv += categories.map(cat => result.scores[cat.name]).join(',') + ',';
-                csv += categories.map(cat => result.scores[cat.name] * cat.weight).join(',') + '\n';
+                return matchesSearch && matchesCategory && matchesPrice && matchesStatus;
             });
 
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `CBUSA_Builder_Scores_${new Date().toISOString().split('T')[0]}.csv`;
-            a.click();
-            URL.revokeObjectURL(url);
-            // Removed export confirmation alert
-        }
-
-        function exportDetailedResults() {
-            if (builderResults.length === 0) {
-                return; // Silently return if no results
-            }
-
-            let csv = 'CBUSA Builder Evaluation Report\n';
-            csv += `Generated on: ${new Date().toLocaleDateString()}\n`;
-            csv += `Total Builders Evaluated: ${builderResults.length}\n\n`;
-            
-            csv += 'SCORING CRITERIA REFERENCE\n';
-            csv += 'Category,Weight,Score 1,Score 2,Score 3,Score 4,Score 5\n';
-            
-            const criteriaMap = {
-                "National contracts enrolled": [9, "3-1", "4-3", "5-7", "8-10", ">10"],
-                "National contracts reported (avg last 4 quarters)": [9, "3-1", "4-3", "5-4", "8-6", ">8"],
-                "# of local vendors used (last 4 quarters)": [7, "3-1", "6-4", "9-7", "11-10", ">12"],
-                "% of annual revenue made in rebates": [9, "0-0.1%", "0.1-0.5%", "0.5-1%", "1-2%", ">2%"],
-                "% of events attended": [9, "0-25%", "25-50%", "50-75%", "75-99%", "100%"],
-                "% of GM meetings attended": [9, "0-25%", "26-50%", "51-75%", "76-99%", "100%"],
-                "Payment discrepancies (past 12 months)": [10, ">5 late", "4-5 late", "2-3 late", "1 late", "0 late"],
-                "Builder Reporting?": [6, "No", "-", "-", "-", "Yes"],
-                "# of homes built annually": [6, "0", "3-1", "7-4", "19-8", ">20"],
-                "Average $ of each project": [6, "$0-$100K", "$100K-$400K", "$400K-$750K", "$750K-$1.5M", ">$1.5M"],
-                "Total annual revenue": [6, "<$30M", "-", "-", "-", ">$30M"],
-                "% of committed buys participated": [7, "0%", "25%", "50%", "75%", "100%"],
-                "Total Rebates": [7, "<0", "0", "10-1", "25-11", ">25"]
-            };
-
-            Object.entries(criteriaMap).forEach(([category, data]) => {
-                const [weight, ...criteria] = data;
-                csv += `"${category}",${weight},"${criteria[0]}","${criteria[1]}","${criteria[2]}","${criteria[3]}","${criteria[4]}"\n`;
-            });
-
-            csv += '\n\nBUILDER RANKINGS\n';
-            csv += 'Rank,Builder Name,Total Score,Partnership Level\n';
-
-            const sortedResults = [...builderResults].sort((a, b) => b.total - a.total);
-            
-            sortedResults.forEach((result, index) => {
-                const partnershipLevel = result.total >= 400 ? 'Excellent' :
-                                       result.total >= 350 ? 'Good' :
-                                       result.total >= 300 ? 'Average' :
-                                       result.total >= 200 ? 'Below Average' : 'Poor';
-                csv += `${index + 1},"${result.name}",${result.total},${partnershipLevel}\n`;
-            });
-
-            csv += '\n\nDETAILED SCORING BREAKDOWN\n';
-            csv += 'Builder Name,Category,Score,Weight,Points,Criteria Met\n';
-
-            sortedResults.forEach(result => {
-                categories.forEach(category => {
-                    const score = result.scores[category.name];
-                    const points = score * category.weight;
-                    const criteria = criteriaMap[category.name];
-                    const criteriaMet = criteria ? criteria[score] : 'N/A';
-                    csv += `"${result.name}","${category.name}",${score},${category.weight},${points},"${criteriaMet}"\n`;
-                });
-            });
-
-            csv += '\n\nSUMMARY STATISTICS\n';
-            const scores = sortedResults.map(r => r.total);
-            const avgScore = (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1);
-            const maxScore = Math.max(...scores);
-            const minScore = Math.min(...scores);
-            
-            csv += `Average Score,${avgScore}\n`;
-            csv += `Highest Score,${maxScore}\n`;
-            csv += `Lowest Score,${minScore}\n`;
-            csv += `Total Builders,${builderResults.length}\n`;
-
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `CBUSA_Builder_Detailed_Report_${new Date().toISOString().split('T')[0]}.csv`;
-            a.click();
-            URL.revokeObjectURL(url);
-            // Removed export confirmation alert
-        }
-
-        // Add a function to restore unsaved builder when needed
-        function restoreBuilderIfNeeded() {
-            if (builderBeingEdited) {
-                // Check if this builder is already in results (avoid duplicates)
-                const exists = builderResults.find(b => b.name === builderBeingEdited.name);
-                if (!exists) {
-                    builderResults.push(builderBeingEdited);
+            // Sort
+            filteredRobots.sort((a, b) => {
+                switch(sortBy) {
+                    case 'name':
+                        return a.name.localeCompare(b.name);
+                    case 'price-low':
+                        return a.priceMin - b.priceMin;
+                    case 'price-high':
+                        return b.priceMin - a.priceMin;
+                    default:
+                        return 0;
                 }
-                builderBeingEdited = null;
-                displayResults();
-            }
+            });
+
+            renderRobots(filteredRobots);
         }
 
-        // Add event listener for when user starts typing a new builder name
-        document.addEventListener('DOMContentLoaded', function() {
-            createCalculator();
-            updateCarousel();
-            
-            // Restore unsaved builder when user starts entering a new name
-            const builderNameInput = document.getElementById('builder-name');
-            let lastBuilderName = '';
-            
-            builderNameInput.addEventListener('input', function() {
-                const currentName = this.value.trim();
-                // If they're typing a completely new name, restore any unsaved builder
-                if (builderBeingEdited && currentName !== builderBeingEdited.name && currentName !== '' && lastBuilderName === '') {
-                    restoreBuilderIfNeeded();
-                }
-                lastBuilderName = currentName;
-            });
+        // Populate category filter
+        const categories = [...new Set(robots.map(r => r.category))];
+        const categoryFilter = document.getElementById('categoryFilter');
+        categories.forEach(cat => {
+            const option = document.createElement('option');
+            option.value = cat;
+            option.textContent = cat;
+            categoryFilter.appendChild(option);
         });
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', filterAndSort);
+        document.getElementById('categoryFilter').addEventListener('change', filterAndSort);
+        document.getElementById('priceFilter').addEventListener('change', filterAndSort);
+        document.getElementById('statusFilter').addEventListener('change', filterAndSort);
+        document.getElementById('sortBy').addEventListener('change', filterAndSort);
+
+        // Initial render
+        renderRobots(robots);
     </script>
 </body>
 </html>
